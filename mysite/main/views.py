@@ -18,19 +18,18 @@ def home(response):
 
 
 def spotify_view(response):
-    sp_oauth = spotify.create_spotify_oauth()
+    # sp_oauth = spotify.create_spotify_oauth()
     # TODO: session.clear() equiv of session.clear() of flask
     # for key in response.session.keys():
     #     del response.session[key]
 
-    # https://stackoverflow.com/questions/12166368/django-request-session-getname-false-what-does-this-code-mean
-    code = response.session.get('code')
-    token_info = sp_oauth.get_access_token(code)
-    response.session['spotify_token'] = token_info
+    # # https://stackoverflow.com/questions/12166368/django-request-session-getname-false-what-does-this-code-mean
+    # code = response.session.get('code')
+    # token_info = sp_oauth.get_access_token(code)
+    # response.session['spotify_token'] = token_info
 
-    return HttpResponse('idk lol')
 
-    # return render(response, 'main/spotify.html')
+    return render(response, 'main/spotify.html')
 
     # if response and current_track_info:
     #     artist = current_track_info.get('artists')

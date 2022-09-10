@@ -8,6 +8,8 @@ from collections import OrderedDict
 
 from . import views
 
+from django.urls import path
+
 SPOTIFY_GET_CURRENT_TRACK_URL = 'https://api.spotify.com/v1/me/player/currently-playing'
 ACCESS_TOKEN = 'BQC0vMCa-t3a-wOP5SyVvMo0UgqJa87XbG6Kd6MjXXLhf9hur-vp9-sSFVfG5el6dd1qSlpUu2v54rylqASVI9DXweatFpTHgwZGLTFKdDhG0hRsmJHBlMSPSdnO6icOEXGfZ5e-KQB3y4MTqLk3u-uffw3R6aPs5mjrKJ-kkhkMmOpw2F7vT-FSbf6q0nC_OTMuwDEP'
 KEY_MAP = {
@@ -133,7 +135,7 @@ def create_spotify_oauth():
     return SpotifyOAuth(
         client_id='9f02cc6a5c9341b0be33ee481fcf77ce',
         client_secret='62b96979822148ed833854e7cb74d079',
-        redirect_uri='http://127.0.0.1:8000/home', # TODO: don't hardcode
+        redirect_uri='http://127.0.0.1:8000/spotify', # TODO: don't hardcode
         scope=['user-read-currently-playing', 'user-modify-playback-state'],
         # cache_handler=cache_handler
     )
