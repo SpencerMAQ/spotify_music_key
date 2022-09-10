@@ -1,0 +1,11 @@
+{% extends 'main/base.html' %}
+
+{% block title %} Currently Playing {% endblock %}
+
+{% block content %}
+<h3>{{artist}}</h3>
+<h4>{{track}}</h4>
+<h4>{{key}} {{mode}}</h4>
+{% if key_confidence %}<h6>{{key_confidence}}%</h6>{% endif %}
+
+{% endblock %}
