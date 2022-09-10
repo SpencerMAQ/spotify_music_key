@@ -2,12 +2,10 @@ from collections import OrderedDict
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib import messages
 
 from .models import ToDoList, Item
 
 from . import spotify
-# import spotipy
 
 def index(response):
     return render(response, 'main/base.html', {})
@@ -18,16 +16,6 @@ def home(response):
 
 
 def spotify_view(response):
-    # sp_oauth = spotify.create_spotify_oauth()
-    # TODO: session.clear() equiv of session.clear() of flask
-    # for key in response.session.keys():
-    #     del response.session[key]
-
-    # # https://stackoverflow.com/questions/12166368/django-request-session-getname-false-what-does-this-code-mean
-    # code = response.session.get('code')
-    # token_info = sp_oauth.get_access_token(code)
-    # response.session['spotify_token'] = token_info
-
     current_track_info = spotify.get_current_track_info()
 
 
@@ -50,42 +38,6 @@ def spotify_view(response):
         spotify_info = {'artist': 'Spotify currently not playing or auth code expired'}
 
     return render(response, 'main/spotify.html', context=spotify_info)
-
-
-def spotify_authorize(response):
-    sp_oauth = spotify.create_spotify_oauth()
-    # reset session first
-    try:
-        del response.session['spotify_token']
-    except KeyError:
-        pass
-
-def spotify_login(response):
-    # cache_handler = spotipy.cache_handler.DjangoSessionCacheHandler(response)
-    # # creates a spotipy.oauth2.SpotifyOAuth object
-    # auth_manager = spotify.create_spotify_oauth(cache_handler=cache_handler)
-    #
-    # if response.session.get('code'):
-    #     auth_manager.get_access_token(response.session.get('code'))
-    #     return redirect('/spotify')
-    #
-    # if not auth_manager.validate_token(cache_handler.get_cached_token()):
-    #     auth_url = auth_manager.get_authorize_url()
-    #     return HttpResponse(f'<h2><a href="{auth_url}">Sign in</a></h2>')
-
-
-    # # creates a spotipy.oauth2.SpotifyOAuth object
-    # sp_oauth = spotify.create_spotify_oauth()
-    # # the pop up page form spotify to authorize???
-    # auth_url = sp_oauth.get_authorize_url()
-    # # django takes you to auth_url then
-    # return redirect(auth_url)
-    pass
-
-def spotify_logout(response):
-    # TODO
-    # https://github.com/plamere/spotipy/blob/master/examples/app.py#L67
-    pass
 
 
 def create_todo(response):

@@ -1,14 +1,9 @@
 import requests
 import time
-import spotipy
 
-from spotipy.oauth2 import SpotifyOAuth
 from pprint import pprint
 from collections import OrderedDict
 
-# from . import views
-
-from django.urls import path
 
 SPOTIFY_GET_CURRENT_TRACK_URL = 'https://api.spotify.com/v1/me/player/currently-playing'
 ACCESS_TOKEN = 'BQCK29suRvw-TlQRoSwjexcCQk1p0lhBLsVHH7_Ntx1iKOScpF7Mt8HxKVllpPl_EpqNIFCG1Du01STdDqAcEX0_TewwhlByvE-mDEQysarkzM69O9OibMg4USlmoYyPNvUfZ6KiX2gb-6X2XU5kRCJwg2-HrXmlqN8U7OIb-TPb08xvC1E1k5yOCU-rrXfY9BOUiAYf'
