@@ -7,7 +7,7 @@ from django.contrib import messages
 from .models import ToDoList, Item
 
 from . import spotify
-import spotipy
+# import spotipy
 
 def index(response):
     return render(response, 'main/base.html', {})
@@ -28,33 +28,28 @@ def spotify_view(response):
     # token_info = sp_oauth.get_access_token(code)
     # response.session['spotify_token'] = token_info
 
+    current_track_info = spotify.get_current_track_info()
 
-    return render(response, 'main/spotify.html')
 
-    # if response and current_track_info:
-    #     artist = current_track_info.get('artists')
-    #     track = current_track_info.get('track_name')
-    #     key = current_track_info.get('key')
-    #     mode = current_track_info.get('mode')
-    #     key_confidence = current_track_info.get('key_confidence')
-    #
-    #     spotify_info = OrderedDict({
-    #         'artist': artist,
-    #         'track': track,
-    #         'key': key,
-    #         'key_confidence': round(key_confidence, 2),
-    #         'mode': mode,
-    #     })
-    #
-    #     print(spotify_info)
+    if response and current_track_info:
+        artist = current_track_info.get('artists')
+        track = current_track_info.get('track_name')
+        key = current_track_info.get('key')
+        mode = current_track_info.get('mode')
+        key_confidence = current_track_info.get('key_confidence')
 
-        # TODO: auto refresh site when track changes
-        # https://stackoverflow.com/questions/19094720/how-to-automatically-reload-django-when-files-change
+        spotify_info = OrderedDict({
+            'artist': artist,
+            'track': track,
+            'key': key,
+            'key_confidence': round(key_confidence, 2),
+            'mode': mode,
+        })
 
-    # else:
-    #     spotify_info = {'artist': 'Spotify currently not playing or auth code expired'}
+    else:
+        spotify_info = {'artist': 'Spotify currently not playing or auth code expired'}
 
-    # return render(response, 'main/spotify.html', context=spotify_info)
+    return render(response, 'main/spotify.html', context=spotify_info)
 
 
 def spotify_authorize(response):
@@ -79,12 +74,13 @@ def spotify_login(response):
     #     return HttpResponse(f'<h2><a href="{auth_url}">Sign in</a></h2>')
 
 
-    # creates a spotipy.oauth2.SpotifyOAuth object
-    sp_oauth = spotify.create_spotify_oauth()
-    # the pop up page form spotify to authorize???
-    auth_url = sp_oauth.get_authorize_url()
-    # django takes you to auth_url then
-    return redirect(auth_url)
+    # # creates a spotipy.oauth2.SpotifyOAuth object
+    # sp_oauth = spotify.create_spotify_oauth()
+    # # the pop up page form spotify to authorize???
+    # auth_url = sp_oauth.get_authorize_url()
+    # # django takes you to auth_url then
+    # return redirect(auth_url)
+    pass
 
 def spotify_logout(response):
     # TODO

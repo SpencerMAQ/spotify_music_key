@@ -6,12 +6,12 @@ from spotipy.oauth2 import SpotifyOAuth
 from pprint import pprint
 from collections import OrderedDict
 
-from . import views
+# from . import views
 
 from django.urls import path
 
 SPOTIFY_GET_CURRENT_TRACK_URL = 'https://api.spotify.com/v1/me/player/currently-playing'
-ACCESS_TOKEN = 'BQC0vMCa-t3a-wOP5SyVvMo0UgqJa87XbG6Kd6MjXXLhf9hur-vp9-sSFVfG5el6dd1qSlpUu2v54rylqASVI9DXweatFpTHgwZGLTFKdDhG0hRsmJHBlMSPSdnO6icOEXGfZ5e-KQB3y4MTqLk3u-uffw3R6aPs5mjrKJ-kkhkMmOpw2F7vT-FSbf6q0nC_OTMuwDEP'
+ACCESS_TOKEN = 'BQCK29suRvw-TlQRoSwjexcCQk1p0lhBLsVHH7_Ntx1iKOScpF7Mt8HxKVllpPl_EpqNIFCG1Du01STdDqAcEX0_TewwhlByvE-mDEQysarkzM69O9OibMg4USlmoYyPNvUfZ6KiX2gb-6X2XU5kRCJwg2-HrXmlqN8U7OIb-TPb08xvC1E1k5yOCU-rrXfY9BOUiAYf'
 KEY_MAP = {
     -1: 'No Key Detected',
     0: 'C',
@@ -44,34 +44,21 @@ MODE_MAP = {
 # https://spotipy.readthedocs.io/en/master/?highlight=cache#customized-token-caching
 # https://github.com/plamere/spotipy/blob/master/examples/app.py#L43
 
-def get_current_track_info(response) -> dict or None:
+def get_current_track_info() -> dict or None:
     # TODO: implement a retry strategy
 
-    # response = requests.get(
-    #     SPOTIFY_GET_CURRENT_TRACK_URL,
-    #     headers={
-    #         "Authorization": f"Bearer {ACCESS_TOKEN}"
-    #     }
-    # )
-    # print(response)
-    #
-    # if response:
-    #     json_resp = response.json()
-    # else:
-    #     json_resp = None
-    #     return json_resp
+    response = requests.get(
+        SPOTIFY_GET_CURRENT_TRACK_URL,
+        headers={
+            "Authorization": f"Bearer {ACCESS_TOKEN}"
+        }
+    )
 
-    cache_handler = spotipy.cache_handler.DjangoSessionCacheHandler(response)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
-
-    if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return None
-
-    sp_instance = spotipy.Spotify(auth_manager=auth_manager)
-    resp = sp_instance.current_user_playing_track()
-
-    json_resp = resp
-    print('-----------------',json_resp)
+    if response:
+        json_resp = response.json()
+    else:
+        json_resp = None
+        return json_resp
 
     track_id = json_resp['item']['id']
     track_name = json_resp['item']['name']
@@ -81,7 +68,7 @@ def get_current_track_info(response) -> dict or None:
 
     artist_names = ', '.join([artist['name'] for artist in artists])
 
-    theory_info = get_theory_info(track_id=track_id, response=response)
+    theory_info = get_theory_info(track_id=track_id)
     current_track_info = OrderedDict({
         "id": track_id,
         "track_name": track_name,
@@ -94,30 +81,20 @@ def get_current_track_info(response) -> dict or None:
 
     return current_track_info
 
-def get_theory_info(track_id: int, response) -> dict or None:
-    # response = requests.get(
-    #     f'https://api.spotify.com/v1/audio-analysis/{track_id}',
-    #     headers={
-    #         "Authorization": f"Bearer {ACCESS_TOKEN}"
-    #     }
-    # )
-    #
-    # if response:
-    #     print(response)
-    #     json_resp: dict = response.json()
-    # else:
-    #     json_resp = None
-    #     return json_resp
+def get_theory_info(track_id: int) -> dict or None:
+    response = requests.get(
+        f'https://api.spotify.com/v1/audio-analysis/{track_id}',
+        headers={
+            "Authorization": f"Bearer {ACCESS_TOKEN}"
+        }
+    )
 
-    cache_handler = spotipy.cache_handler.DjangoSessionCacheHandler(response)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
-
-    if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return None
-
-    sp_instance = spotipy.Spotify(auth_manager=auth_manager)
-    resp = sp_instance.audio_analysis(track_id)
-    json_resp = resp
+    if response:
+        print(response)
+        json_resp: dict = response.json()
+    else:
+        json_resp = None
+        return json_resp
 
     # https://developer.spotify.com/documentation/web-api/reference/#/operations/get-audio-analysis
     key = KEY_MAP.get(json_resp.get('track').get('key'))
@@ -131,14 +108,13 @@ def get_theory_info(track_id: int, response) -> dict or None:
     return info
 
 
-def create_spotify_oauth():
-    return SpotifyOAuth(
-        client_id='9f02cc6a5c9341b0be33ee481fcf77ce',
-        client_secret='62b96979822148ed833854e7cb74d079',
-        redirect_uri='http://127.0.0.1:8000/spotify', # TODO: don't hardcode
-        scope=['user-read-currently-playing', 'user-modify-playback-state'],
-        # cache_handler=cache_handler
-    )
+# def create_spotify_oauth():
+#     return SpotifyOAuth(
+#         client_id='9f02cc6a5c9341b0be33ee481fcf77ce',
+#         client_secret='62b96979822148ed833854e7cb74d079',
+#         redirect_uri='http://127.0.0.1:8000/spotify', # TODO: don't hardcode
+#         scope=['user-read-currently-playing', 'user-modify-playback-state'],
+#     )
 
 
 def main():
