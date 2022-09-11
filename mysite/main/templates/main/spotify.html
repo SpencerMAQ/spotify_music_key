@@ -5,7 +5,17 @@
 {% block content %}
 <h3>{{artist}}</h3>
 <h4>{{track}}</h4>
-<h4>{{key}} {{mode}}</h4>
-{% if key_confidence %}<h6>{{key_confidence}}%</h6>{% endif %}
+<details open class="definition-field">
+    <summary class="definition-title">Reveal/Hide Key</summary>
+    <h4>{{key}} {{mode}}</h4>
+    {% if key_confidence %}<h6>{{key_confidence}}%</h6>{% endif %}
+</details>
+<a href="https://tunebat.com/Search?q={{artist}}+{{track}}">tunebat</a><br>
+<a href="https://www.notediscover.com/search?q={{artist}}+{{track}}">notediscover</a><br>
+<a href="https://chordify.net/search/{{artist}}+{{track}}">chordify(requires login)</a><br>
+<a href="https://www.ultimate-guitar.com/search.php?search_type=title&value={{artist}}+{{track}}">ultimate guitar</a>
+
+{% load static %}
+<img src="{% static "main/media/circle_5.jpg" %}" alt="home" class="fifths"/>
 
 {% endblock %}

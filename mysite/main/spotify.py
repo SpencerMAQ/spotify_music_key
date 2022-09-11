@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 
 SPOTIFY_GET_CURRENT_TRACK_URL = 'https://api.spotify.com/v1/me/player/currently-playing'
-ACCESS_TOKEN = 'BQCK29suRvw-TlQRoSwjexcCQk1p0lhBLsVHH7_Ntx1iKOScpF7Mt8HxKVllpPl_EpqNIFCG1Du01STdDqAcEX0_TewwhlByvE-mDEQysarkzM69O9OibMg4USlmoYyPNvUfZ6KiX2gb-6X2XU5kRCJwg2-HrXmlqN8U7OIb-TPb08xvC1E1k5yOCU-rrXfY9BOUiAYf'
+ACCESS_TOKEN = 'BQAzkcLybsZb2h-Ge2CTRUo4d3NG3mogYoIlAg65kKXLGOeWJ2C2u_oRyUDuBUjbA6_9HPs7okel5ambfRzhuwOY3iX95GJp5PBz33KlTxvCr4cDLB9NhjxnBbgDO44norJQLoSrG1X7upffr-KTaFnpG0gF9MOdOaOf63qDtxb85gx-zPLPKrK2o4ZmyLKVyOVgTomC'
 KEY_MAP = {
     -1: 'No Key Detected',
     0: 'C',
