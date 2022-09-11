@@ -7,7 +7,7 @@ from collections import OrderedDict
 
 
 SPOTIFY_GET_CURRENT_TRACK_URL = 'https://api.spotify.com/v1/me/player/currently-playing'
-ACCESS_TOKEN = 'BQAEF1x_gXhhMMYePpyWzgAeoqU3flFTzGQ66l-L9pMb2DbImrE9DY-qorWtymmclzJxd9_OZ3yjXVuqwziYbJWvCvyHqcTxhfNA6UGzrkzY3qasfwHvipYivW12EJMFfLkJNZCuIkqTO3HAuXjYVkKm4RuCJrzCddeqLgFIIjz8gm4ZF-JBw-HGkvTYauSh6fWFRSJN'
+ACCESS_TOKEN = 'BQAzdWyDwIkNUMaC5QcQEt8mPumxc4kXPasb_lERv7xEPrflDWNcfw-f3jtQLj0JS4yKzevza9QGBaDCTjtjPszVy6RF5sN2sZZ-QfnE7CuM4sNYOVNUREYFQNtaj7wyUiHJJ-GNL4-GgW57XZ58_1pTczP_NZ_XVkL8jL9LIlJ5lq4ZLHQoUxSl-6OJT1vhyxKm7YuZ'
 KEY_MAP = {
     -1: 'No Key Detected',
     0: 'C',
@@ -51,7 +51,7 @@ def get_current_track_info() -> dict or None:
     )
 
     if response:
-        json_resp = response.json()
+        json_resp: dict = response.json()
     else:
         json_resp = None
         return json_resp
@@ -59,12 +59,14 @@ def get_current_track_info() -> dict or None:
     track_id = json_resp['item']['id']
     track_name = json_resp['item']['name']
     track_name_for_searching = re.sub(r'\(.*?\)', r'', track_name)
-    print(track_name_for_searching)
+
+    album_art = json_resp.get('item').get('album').get('images')
+    if album_art: album_art = album_art[1].get('url')
 
     artists = [artist for artist in json_resp['item']['artists']]
     first_artist = artists[0]['name']
 
-    link = json_resp['item']['external_urls']['spotify']
+    link = json_resp.get('item').get('external_urls').get('spotify')
 
     artist_names = ', '.join([artist['name'] for artist in artists])
 
@@ -78,7 +80,8 @@ def get_current_track_info() -> dict or None:
         'key_confidence': theory_info.get('key_confidence'),
         'mode': theory_info.get('mode'),
         'first_artist': first_artist,
-        'track_name_for_searching': track_name_for_searching
+        'track_name_for_searching': track_name_for_searching,
+        'album_art': album_art
     })
 
     return current_track_info
@@ -92,10 +95,9 @@ def get_theory_info(track_id: int) -> dict or None:
     )
 
     if response:
-        print(response)
         json_resp: dict = response.json()
     else:
-        json_resp = None
+        json_resp = {}
         return json_resp
 
     # https://developer.spotify.com/documentation/web-api/reference/#/operations/get-audio-analysis

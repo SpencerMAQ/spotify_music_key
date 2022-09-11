@@ -30,15 +30,19 @@ def spotify_view(response):
         key = current_track_info.get('key')
         mode = current_track_info.get('mode')
         key_confidence = current_track_info.get('key_confidence')
+        if key_confidence: key_confidence = round(key_confidence, 2)
+
+        album_art = current_track_info.get('album_art')
 
         spotify_info = OrderedDict({
             'artist': artist,
             'track': track,
             'key': key,
-            'key_confidence': round(key_confidence, 2),
+            'key_confidence': key_confidence,
             'mode': mode,
             'first_artist': first_artist,
-            'track_name_for_searching': track_name_for_searching
+            'track_name_for_searching': track_name_for_searching,
+            'album_art': album_art
         })
 
     else:

@@ -3,19 +3,25 @@
 {% block title %} Currently Playing {% endblock %}
 
 {% block content %}
-<h3>{{artist}}</h3>
-<h4>{{track}}</h4>
-<details open class="definition-field">
-    <summary class="definition-title">Reveal/Hide Key</summary>
-    <h4>{{key}} {{mode}}</h4>
-    {% if key_confidence %}<h6>{{key_confidence}}%</h6>{% endif %}
-</details>
-<a href="https://tunebat.com/Search?q={{first_artist}}+{{track_name_for_searching}}">tunebat</a><br>
-<a href="https://www.notediscover.com/search?q={{first_artist}}+{{track_name_for_searching}}">notediscover</a><br>
-<a href="https://chordify.net/search/{{first_artist}}+{{track_name_for_searching}}">chordify(requires login)</a><br>
-<a href="https://www.ultimate-guitar.com/search.php?search_type=title&value={{first_artist}}+{{track_name_for_searching}}">ultimate guitar</a>
+    <h3>{{artist}}</h3>
+    {% if album_art %}<img src="{{album_art}}" alt="home" class="album_art">{% endif %}
+    <h4>{{track}}</h4>
+    {% if key %}
+    <details open class="definition-field">
+        <summary class="definition-title">Reveal/Hide Key</summary>
+        <h4>{{key}} {{mode}}</h4>
+        {% if key_confidence %}<h6>{{key_confidence}}%</h6>{% endif %}
+    </details>
+    {% endif %}
 
-{% load static %}
-<img src="{% static "main/media/circle_5.jpg" %}" alt="home" class="fifths"/>
+    <br><br>
+
+    <a href="https://tunebat.com/Search?q={{first_artist}}+{{track_name_for_searching}}">tunebat</a><br>
+    <a href="https://www.notediscover.com/search?q={{first_artist}}+{{track_name_for_searching}}">notediscover</a><br>
+    <a href="https://chordify.net/search/{{first_artist}}+{{track_name_for_searching}}">chordify(requires login)</a><br>
+    <a href="https://www.ultimate-guitar.com/search.php?search_type=title&value={{first_artist}}+{{track_name_for_searching}}">ultimate guitar</a>
+
+    {% load static %}
+    <img src="{% static "main/media/circle_5.jpg" %}" alt="home" class="fifths"/>
 
 {% endblock %}
