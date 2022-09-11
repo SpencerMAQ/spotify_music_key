@@ -1,12 +1,13 @@
 import requests
 import time
+import re
 
 from pprint import pprint
 from collections import OrderedDict
 
 
 SPOTIFY_GET_CURRENT_TRACK_URL = 'https://api.spotify.com/v1/me/player/currently-playing'
-ACCESS_TOKEN = 'BQAzkcLybsZb2h-Ge2CTRUo4d3NG3mogYoIlAg65kKXLGOeWJ2C2u_oRyUDuBUjbA6_9HPs7okel5ambfRzhuwOY3iX95GJp5PBz33KlTxvCr4cDLB9NhjxnBbgDO44norJQLoSrG1X7upffr-KTaFnpG0gF9MOdOaOf63qDtxb85gx-zPLPKrK2o4ZmyLKVyOVgTomC'
+ACCESS_TOKEN = 'BQAEF1x_gXhhMMYePpyWzgAeoqU3flFTzGQ66l-L9pMb2DbImrE9DY-qorWtymmclzJxd9_OZ3yjXVuqwziYbJWvCvyHqcTxhfNA6UGzrkzY3qasfwHvipYivW12EJMFfLkJNZCuIkqTO3HAuXjYVkKm4RuCJrzCddeqLgFIIjz8gm4ZF-JBw-HGkvTYauSh6fWFRSJN'
 KEY_MAP = {
     -1: 'No Key Detected',
     0: 'C',
@@ -57,7 +58,11 @@ def get_current_track_info() -> dict or None:
 
     track_id = json_resp['item']['id']
     track_name = json_resp['item']['name']
+    track_name_for_searching = re.sub(r'\(.*?\)', r'', track_name)
+    print(track_name_for_searching)
+
     artists = [artist for artist in json_resp['item']['artists']]
+    first_artist = artists[0]['name']
 
     link = json_resp['item']['external_urls']['spotify']
 
@@ -71,7 +76,9 @@ def get_current_track_info() -> dict or None:
         "link": link,
         'key': theory_info.get('key'),
         'key_confidence': theory_info.get('key_confidence'),
-        'mode': theory_info.get('mode')
+        'mode': theory_info.get('mode'),
+        'first_artist': first_artist,
+        'track_name_for_searching': track_name_for_searching
     })
 
     return current_track_info

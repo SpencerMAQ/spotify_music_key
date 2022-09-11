@@ -16,12 +16,17 @@ def home(response):
 
 
 def spotify_view(response):
-    current_track_info = spotify.get_current_track_info()
-
+    import json
+    try:
+        current_track_info = spotify.get_current_track_info()
+    except json.JSONDecodeError:
+        current_track_info = None
 
     if response and current_track_info:
         artist = current_track_info.get('artists')
+        first_artist = current_track_info.get('first_artist')
         track = current_track_info.get('track_name')
+        track_name_for_searching = current_track_info.get('track_name_for_searching')
         key = current_track_info.get('key')
         mode = current_track_info.get('mode')
         key_confidence = current_track_info.get('key_confidence')
@@ -32,10 +37,12 @@ def spotify_view(response):
             'key': key,
             'key_confidence': round(key_confidence, 2),
             'mode': mode,
+            'first_artist': first_artist,
+            'track_name_for_searching': track_name_for_searching
         })
 
     else:
-        spotify_info = {'artist': 'Spotify currently not playing or auth code expired'}
+        spotify_info = {'artist': 'No song currently playing or Auth Key expired'}
 
     return render(response, 'main/spotify.html', context=spotify_info)
 
