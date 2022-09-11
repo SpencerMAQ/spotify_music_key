@@ -3,10 +3,12 @@
 {% block title %} Currently Playing {% endblock %}
 
 {% block content %}
-    <h3>{{artist}}</h3>
+    <br>
     {% if album_art %}<img src="{{album_art}}" alt="home" class="album_art">{% endif %}
-    <h4>{{track}}</h4>
+    <h2>{{track}}</h2>
+    <h6>{{artist}}</h6>
     {% if key %}
+    <br>
     <details open class="definition-field">
         <summary class="definition-title">Reveal/Hide Key</summary>
         <h4>{{key}} {{mode}}</h4>
