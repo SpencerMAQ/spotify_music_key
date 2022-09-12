@@ -28,7 +28,7 @@ MODE_MAP = {
     0: 'minor',
     1: 'Major'
 }
-
+#
 # TODO: better spotify API token, expires less, also try logging in to get auth
 # TODO: check to see if you can actually embed a mini player (with pause, play, next, back) and maybe a few queues
 # ^if none, start doing your own manually-coded player
