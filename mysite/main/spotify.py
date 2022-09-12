@@ -49,7 +49,7 @@ def get_current_track_info() -> dict or None:
             "Authorization": f"Bearer {ACCESS_TOKEN}"
         }
     )
-    #
+
     if response:
         json_resp: dict = response.json()
     else:
