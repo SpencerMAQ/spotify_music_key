@@ -55,7 +55,7 @@ def get_current_track_info() -> dict or None:
     else:
         json_resp = None
         return json_resp
-
+    #
     track_id = json_resp['item']['id']
     track_name = json_resp['item']['name']
     track_name_for_searching = re.sub(r'\(.*?\)', r'', track_name)
