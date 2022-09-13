@@ -1,11 +1,14 @@
 from collections import OrderedDict
 
+import spotipy
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 
-from . import spotify
+# from .spotify import create_spotify_oauth
+# from . import sp_token_utils
 from .models import SpotifyToken
-from .sp_token_utils import update_or_create_user_tokens
+from .sp_token_utils import update_or_create_user_tokens, is_spotify_token_still_valid, refresh_spotify_token, get_user_tokens, create_spotify_oauth
+from .spotify import get_current_track_info, get_theory_info
 
 def index(response):
     return render(response, 'main/base.html', {})
@@ -16,8 +19,8 @@ def home(response):
 
 
 def spotify_login(response):
-    sp_oauth = spotify.create_spotify_oauth()
-    external_auth_url =sp_oauth.get_authorize_url()
+    sp_oauth = create_spotify_oauth()
+    external_auth_url = sp_oauth.get_authorize_url()
 
     return redirect(external_auth_url)
 
@@ -28,7 +31,7 @@ def spotify_temp_redirect(response):
     an OAuth Token
     """
     # TODO: redirect this to the main spotify page
-    sp_oauth = spotify.create_spotify_oauth()
+    sp_oauth = create_spotify_oauth()
     # https://youtu.be/rYDDWVuv-kI?t=1193
     code = response.GET.get('code')
     error = response.GET.get('error') # TODO
@@ -56,20 +59,36 @@ def spotify_logout(response):
 
 
 def spotify_view(response):
-    import json
-    try:
-        current_track_info = spotify.get_current_track_info()
-    except json.JSONDecodeError:
-        current_track_info = None
+    # import json
+    # try:
+    #     current_track_info = spotify.get_current_track_info()
+    # except json.JSONDecodeError:
+    #     current_track_info = None
+    session_id = response.session.session_key
+
+    sp_token_django_obj = get_user_tokens(session_id=session_id)
+    if not sp_token_django_obj:
+        print('User not logged in')
+        return redirect('spotify_login')
+
+    if not is_spotify_token_still_valid(session_id=session_id):
+        refresh_spotify_token(session_id=session_id)
+        sp_token_django_obj = get_user_tokens(session_id=session_id)
+
+    sp = spotipy.Spotify(auth = sp_token_django_obj.access_token)
+    current_track_info = get_current_track_info(sp.current_user_playing_track())
+
+    current_track_theory_info = sp.audio_analysis(sp.current_user_playing_track().get('item').get('id'))
+    current_track_theory_info = get_theory_info(current_track_theory_info)
 
     if response and current_track_info:
         artist = current_track_info.get('artists')
         first_artist = current_track_info.get('first_artist')
         track = current_track_info.get('track_name')
         track_name_for_searching = current_track_info.get('track_name_for_searching')
-        key = current_track_info.get('key')
-        mode = current_track_info.get('mode')
-        key_confidence = current_track_info.get('key_confidence')
+        key = current_track_theory_info.get('key')
+        mode = current_track_theory_info.get('mode')
+        key_confidence = current_track_theory_info.get('key_confidence')
         if key_confidence: key_confidence = round(key_confidence, 2)
 
         album_art = current_track_info.get('album_art')

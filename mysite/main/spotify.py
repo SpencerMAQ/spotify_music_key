@@ -8,10 +8,11 @@ from collections import OrderedDict
 from spotipy.oauth2 import SpotifyOAuth
 
 from ._secret_info import CLIENT_ID, CLIENT_SECRET
+from .sp_token_utils import create_spotify_oauth
 
 
-SPOTIFY_GET_CURRENT_TRACK_URL = 'https://api.spotify.com/v1/me/player/currently-playing'
-ACCESS_TOKEN = 'BQCrwuEMO9htK36eV7trWP9o3iwjpCI5IjA3Nu3cCvgvdaRMyj02Akmwt_XoxVHr5So0c5rGN_QvQGl-Oqa7pYTC67kqxncu2Ym0dRBfE-tlX3C48gGo5vGYZnFXXjO-f5K7DtUrYoCuTqznQzN2kZMzhdZzXKVcdwTZoDypBSx8YFZYpjl5BLZevvx8kwh_csr1xWwj'
+# SPOTIFY_GET_CURRENT_TRACK_URL = 'https://api.spotify.com/v1/me/player/currently-playing'
+# ACCESS_TOKEN = 'BQCrwuEMO9htK36eV7trWP9o3iwjpCI5IjA3Nu3cCvgvdaRMyj02Akmwt_XoxVHr5So0c5rGN_QvQGl-Oqa7pYTC67kqxncu2Ym0dRBfE-tlX3C48gGo5vGYZnFXXjO-f5K7DtUrYoCuTqznQzN2kZMzhdZzXKVcdwTZoDypBSx8YFZYpjl5BLZevvx8kwh_csr1xWwj'
 KEY_MAP = {
     -1: 'No Key Detected',
     0: 'C',
@@ -33,33 +34,16 @@ MODE_MAP = {
     1: 'Major'
 }
 
-# TODO: better spotify API token, expires less, also try logging in to get auth
 # TODO: check to see if you can actually embed a mini player (with pause, play, next, back) and maybe a few queues
 # ^if none, start doing your own manually-coded player
 # https://stackoverflow.com/questions/71979852/how-to-play-and-pause-spotify-embed-with-javascript
 # you might have to look into this: https://developer.spotify.com/documentation/web-playback-sdk/quick-start/
 # WEB PLAYBACK SDK
 
-# TODO: might want to check out spotipy's cache handler
-# https://spotipy.readthedocs.io/en/master/?highlight=cache#customized-token-caching
-# https://github.com/plamere/spotipy/blob/master/examples/app.py#L43
 
-def get_current_track_info() -> dict or None:
-    # TODO: implement a retry strategy
+def get_current_track_info(json_info) -> dict or None:
+    json_resp = json_info
 
-    response = requests.get(
-        SPOTIFY_GET_CURRENT_TRACK_URL,
-        headers={
-            "Authorization": f"Bearer {ACCESS_TOKEN}"
-        }
-    )
-
-    if response:
-        json_resp: dict = response.json()
-    else:
-        json_resp = None
-        return json_resp
-    #
     track_id = json_resp['item']['id']
     track_name = json_resp['item']['name']
     track_name_for_searching = re.sub(r'\(.*?\)', r'', track_name)
@@ -74,15 +58,15 @@ def get_current_track_info() -> dict or None:
 
     artist_names = ', '.join([artist['name'] for artist in artists])
 
-    theory_info = get_theory_info(track_id=track_id)
+    # theory_info = get_theory_info(track_id=track_id)
     current_track_info = OrderedDict({
         "id": track_id,
         "track_name": track_name,
         "artists": artist_names,
         "link": link,
-        'key': theory_info.get('key'),
-        'key_confidence': theory_info.get('key_confidence'),
-        'mode': theory_info.get('mode'),
+        # 'key': theory_info.get('key'),
+        # 'key_confidence': theory_info.get('key_confidence'),
+        # 'mode': theory_info.get('mode'),
         'first_artist': first_artist,
         'track_name_for_searching': track_name_for_searching,
         'album_art': album_art
@@ -90,19 +74,25 @@ def get_current_track_info() -> dict or None:
 
     return current_track_info
 
-def get_theory_info(track_id: int) -> dict or None:
-    response = requests.get(
-        f'https://api.spotify.com/v1/audio-analysis/{track_id}',
-        headers={
-            "Authorization": f"Bearer {ACCESS_TOKEN}"
-        }
-    )
+def get_theory_info(json_info) -> dict or None:
+    # response = requests.get(
+    #     f'https://api.spotify.com/v1/audio-analysis/{track_id}',
+    #     headers={
+    #         "Authorization": f"Bearer {ACCESS_TOKEN}"
+    #     }
+    # )
 
-    if response:
-        json_resp: dict = response.json()
-    else:
-        json_resp = {}
-        return json_resp
+    # sp_oauth = create_spotify_oauth()
+    # sp = sp_oauth.
+    #
+    #
+    # if response:
+    #     json_resp: dict = response.json()
+    # else:
+    #     json_resp = {}
+    #     return json_resp
+
+    json_resp = json_info
 
     # https://developer.spotify.com/documentation/web-api/reference/#/operations/get-audio-analysis
     key = KEY_MAP.get(json_resp.get('track').get('key'))
