@@ -48,7 +48,7 @@ def spotify_temp_redirect(response):
         refresh_token=sp_access_token_dict.get('refresh_token')
     )
 
-    return HttpResponse('temp redirect')
+    return redirect('spotify_view')
 
 
 def spotify_logout(response):
