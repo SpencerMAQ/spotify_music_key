@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 
 from . import spotify
+from .models import SpotifyToken
+from .sp_token_utils import update_or_create_user_tokens
 
 def index(response):
     return render(response, 'main/base.html', {})
@@ -14,7 +16,39 @@ def home(response):
 
 
 def spotify_login(response):
-    return render(response, 'main/spotify_login.html', context={})
+    sp_oauth = spotify.create_spotify_oauth()
+    external_auth_url =sp_oauth.get_authorize_url()
+
+    return redirect(external_auth_url)
+
+
+def spotify_temp_redirect(response):
+    """
+    Temp page where we get the auth code then exchange it for
+    an OAuth Token
+    """
+    # TODO: redirect this to the main spotify page
+    sp_oauth = spotify.create_spotify_oauth()
+    # https://youtu.be/rYDDWVuv-kI?t=1193
+    code = response.GET.get('code')
+    error = response.GET.get('error') # TODO
+    # print(f'code: {code}')
+
+    sp_access_token_dict: dict = sp_oauth.get_access_token(code=code)
+    # print(f'sp_access_token_dict: {sp_access_token_dict}')
+
+    if not response.session.exists(response.session.session_key):
+        response.session.create()
+
+    update_or_create_user_tokens(
+        session_id=response.session.session_key,
+        access_token=sp_access_token_dict.get('access_token'),
+        expires_in=sp_access_token_dict.get('expires_in'),
+        expires_at=sp_access_token_dict.get('expires_at'),
+        refresh_token=sp_access_token_dict.get('refresh_token')
+    )
+
+    return HttpResponse('temp redirect')
 
 
 def spotify_logout(response):
@@ -57,13 +91,6 @@ def spotify_view(response):
     return render(response, 'main/spotify.html', context=spotify_info)
 
 
-def spotify_temp_redirect(response):
-    """
-    Temp page where we get the auth code then exchange it for
-    an OAuth Token
-    """
-    # TODO: redirect this to the main spotify page
-    return HttpResponse('temp redirect')
 
 def create_todo(response):
     """
