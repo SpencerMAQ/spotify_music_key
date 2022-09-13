@@ -3,8 +3,6 @@ from collections import OrderedDict
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 
-from .models import ToDoList, Item
-
 from . import spotify
 
 def index(response):
@@ -13,6 +11,14 @@ def index(response):
 
 def home(response):
     return render(response, 'main/home.html', {})
+
+
+def spotify_login(response):
+    return render(response, 'main/spotify_login.html', context={})
+
+
+def spotify_logout(response):
+    return render(response, 'main/spotify_logout.html', context={})
 
 
 def spotify_view(response):
@@ -57,6 +63,7 @@ def create_todo(response):
     Then redirects to the list you just created
     """
     from .forms import CreateNewList
+    from .models import ToDoList
 
     if response.method == 'POST':
         # response.POST contains all of the inputted info into the form
