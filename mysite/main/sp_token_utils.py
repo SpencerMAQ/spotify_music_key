@@ -67,7 +67,9 @@ def refresh_spotify_token(session_id):
     but has expired
     Don't use if the user hasn't logged in in the first place
     """
-    refresh_token = get_user_tokens(session_id=session_id)
+    sp_token_django_obj = get_user_tokens(session_id=session_id)
+    refresh_token = sp_token_django_obj.refresh_token
+
     sp_oauth = create_spotify_oauth()
     new_sp_token_dict: dict = sp_oauth.refresh_access_token(refresh_token=refresh_token)
 
@@ -78,6 +80,9 @@ def refresh_spotify_token(session_id):
                                  refresh_token=new_sp_token_dict.get('refresh_token')
                                  )
 
+def logout_and_delete_spotify_tokens(session_id):
+    user_tokens = SpotifyToken.objects.filter(user=session_id)
+    user_tokens.delete()
 
 def create_spotify_oauth():
     """

@@ -4,8 +4,14 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 
 import spotipy
-from .sp_token_utils import update_or_create_user_tokens, is_spotify_token_still_valid, refresh_spotify_token, get_user_tokens, create_spotify_oauth
+from .sp_token_utils import (update_or_create_user_tokens,
+                             is_spotify_token_still_valid,
+                             refresh_spotify_token, get_user_tokens,
+                             create_spotify_oauth,
+                             logout_and_delete_spotify_tokens)
 from .spotify import get_current_track_info, get_theory_info
+
+import time
 
 def index(response):
     return render(response, 'main/base.html', {})
@@ -50,6 +56,9 @@ def spotify_temp_redirect(response):
 
 
 def spotify_logout(response):
+    session_id = response.session.session_key
+    logout_and_delete_spotify_tokens(session_id=session_id)
+
     return render(response, 'main/spotify_logout.html', context={})
 
 
@@ -65,6 +74,7 @@ def spotify_view(response):
         refresh_spotify_token(session_id=session_id)
         sp_token_django_obj = get_user_tokens(session_id=session_id)
 
+    print(sp_token_django_obj.expires_at - time.time()) # TODO: delete this, just debugging stuff
     sp = spotipy.Spotify(auth = sp_token_django_obj.access_token)
     current_track_info = get_current_track_info(sp.current_user_playing_track())
 
