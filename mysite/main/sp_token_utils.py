@@ -41,6 +41,7 @@ def update_or_create_user_tokens(session_id, access_token, expires_in, expires_a
         sp_token_django_obj.save()
     print(sp_token_django_obj)
 
+
 def is_spotify_token_still_valid(session_id) -> bool:
     """
     Only for checking if an existing token is still valid
@@ -79,6 +80,10 @@ def refresh_spotify_token(session_id):
 
 
 def create_spotify_oauth():
+    """
+    Creates a spotipy.oauth2 Oauth object
+        Can be used to create a spotify player, with which you can query current playing songs, etc.
+    """
     return SpotifyOAuth(
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,

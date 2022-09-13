@@ -1,12 +1,9 @@
 from collections import OrderedDict
 
-import spotipy
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 
-# from .spotify import create_spotify_oauth
-# from . import sp_token_utils
-from .models import SpotifyToken
+import spotipy
 from .sp_token_utils import update_or_create_user_tokens, is_spotify_token_still_valid, refresh_spotify_token, get_user_tokens, create_spotify_oauth
 from .spotify import get_current_track_info, get_theory_info
 
@@ -35,10 +32,8 @@ def spotify_temp_redirect(response):
     # https://youtu.be/rYDDWVuv-kI?t=1193
     code = response.GET.get('code')
     error = response.GET.get('error') # TODO
-    # print(f'code: {code}')
 
     sp_access_token_dict: dict = sp_oauth.get_access_token(code=code)
-    # print(f'sp_access_token_dict: {sp_access_token_dict}')
 
     if not response.session.exists(response.session.session_key):
         response.session.create()
@@ -59,17 +54,12 @@ def spotify_logout(response):
 
 
 def spotify_view(response):
-    # import json
-    # try:
-    #     current_track_info = spotify.get_current_track_info()
-    # except json.JSONDecodeError:
-    #     current_track_info = None
     session_id = response.session.session_key
 
     sp_token_django_obj = get_user_tokens(session_id=session_id)
     if not sp_token_django_obj:
-        print('User not logged in')
-        return redirect('spotify_login')
+        spotify_info = {'artist': 'You are not logged into Spotify'}
+        return render(response, 'main/spotify.html', context=spotify_info)
 
     if not is_spotify_token_still_valid(session_id=session_id):
         refresh_spotify_token(session_id=session_id)
@@ -78,8 +68,11 @@ def spotify_view(response):
     sp = spotipy.Spotify(auth = sp_token_django_obj.access_token)
     current_track_info = get_current_track_info(sp.current_user_playing_track())
 
-    current_track_theory_info = sp.audio_analysis(sp.current_user_playing_track().get('item').get('id'))
-    current_track_theory_info = get_theory_info(current_track_theory_info)
+    current_track_theory_info = {}
+    if current_track_info:
+        id = sp.current_user_playing_track().get('item').get('id')
+        current_track_theory_info = sp.audio_analysis(track_id=id)
+        current_track_theory_info = get_theory_info(current_track_theory_info)
 
     if response and current_track_info:
         artist = current_track_info.get('artists')
@@ -105,33 +98,6 @@ def spotify_view(response):
         })
 
     else:
-        spotify_info = {'artist': 'No song currently playing or Auth Key expired'}
+        spotify_info = {'artist': 'No song currently playing'}
 
     return render(response, 'main/spotify.html', context=spotify_info)
-
-
-
-def create_todo(response):
-    """
-    Create a to-do list
-    Then redirects to the list you just created
-    """
-    from .forms import CreateNewList
-    from .models import ToDoList
-
-    if response.method == 'POST':
-        # response.POST contains all of the inputted info into the form
-        form = CreateNewList(response.POST)
-
-        if form.is_valid():
-            n = form.cleaned_data['name']
-            t = ToDoList(name=n)
-            t.save()
-
-        # view the list you just created
-        return HttpResponseRedirect(f'/{t.id}')
-
-    else:
-        form = CreateNewList()
-
-    return render(response, 'main/create_todo.html', {'form': form})

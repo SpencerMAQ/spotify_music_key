@@ -1,18 +1,10 @@
-import requests
-import spotipy
 import time
 import re
 
 from pprint import pprint
 from collections import OrderedDict
-from spotipy.oauth2 import SpotifyOAuth
-
-from ._secret_info import CLIENT_ID, CLIENT_SECRET
-from .sp_token_utils import create_spotify_oauth
 
 
-# SPOTIFY_GET_CURRENT_TRACK_URL = 'https://api.spotify.com/v1/me/player/currently-playing'
-# ACCESS_TOKEN = 'BQCrwuEMO9htK36eV7trWP9o3iwjpCI5IjA3Nu3cCvgvdaRMyj02Akmwt_XoxVHr5So0c5rGN_QvQGl-Oqa7pYTC67kqxncu2Ym0dRBfE-tlX3C48gGo5vGYZnFXXjO-f5K7DtUrYoCuTqznQzN2kZMzhdZzXKVcdwTZoDypBSx8YFZYpjl5BLZevvx8kwh_csr1xWwj'
 KEY_MAP = {
     -1: 'No Key Detected',
     0: 'C',
@@ -41,32 +33,38 @@ MODE_MAP = {
 # WEB PLAYBACK SDK
 
 
-def get_current_track_info(json_info) -> dict or None:
-    json_resp = json_info
+def get_current_track_info(json_info: dict) -> dict or None:
+    """
+    Args:
+        the raw unparsed current track info from spotify
+    Returns:
+        Current track info in a more human-readable dict
+        Includes Track ID, Name, Artist, Album art, etc.
+    """
+    if not json_info:
+        return None
 
-    track_id = json_resp['item']['id']
-    track_name = json_resp['item']['name']
+    json_resp: dict = json_info
+
+    track_id = json_resp.get('item').get('id')
+    track_name = json_resp.get('item').get('name')
     track_name_for_searching = re.sub(r'\(.*?\)', r'', track_name)
 
     album_art = json_resp.get('item').get('album').get('images')
     if album_art: album_art = album_art[1].get('url')
 
-    artists = [artist for artist in json_resp['item']['artists']]
-    first_artist = artists[0]['name']
+    artists = [artist for artist in json_resp.get('item').get('artists')]
+    first_artist = artists[0].get('name')
 
     link = json_resp.get('item').get('external_urls').get('spotify')
 
-    artist_names = ', '.join([artist['name'] for artist in artists])
+    artist_names = ', '.join([artist.get('name') for artist in artists])
 
-    # theory_info = get_theory_info(track_id=track_id)
     current_track_info = OrderedDict({
         "id": track_id,
         "track_name": track_name,
         "artists": artist_names,
         "link": link,
-        # 'key': theory_info.get('key'),
-        # 'key_confidence': theory_info.get('key_confidence'),
-        # 'mode': theory_info.get('mode'),
         'first_artist': first_artist,
         'track_name_for_searching': track_name_for_searching,
         'album_art': album_art
@@ -74,24 +72,13 @@ def get_current_track_info(json_info) -> dict or None:
 
     return current_track_info
 
-def get_theory_info(json_info) -> dict or None:
-    # response = requests.get(
-    #     f'https://api.spotify.com/v1/audio-analysis/{track_id}',
-    #     headers={
-    #         "Authorization": f"Bearer {ACCESS_TOKEN}"
-    #     }
-    # )
-
-    # sp_oauth = create_spotify_oauth()
-    # sp = sp_oauth.
-    #
-    #
-    # if response:
-    #     json_resp: dict = response.json()
-    # else:
-    #     json_resp = {}
-    #     return json_resp
-
+def get_theory_info(json_info: dict) -> dict or None:
+    """
+    Args:
+        The raw unparsed current track Music theory info
+    Returns:
+        Human-readable music theory info on the current track
+    """
     json_resp = json_info
 
     # https://developer.spotify.com/documentation/web-api/reference/#/operations/get-audio-analysis
@@ -106,13 +93,13 @@ def get_theory_info(json_info) -> dict or None:
     return info
 
 
-def create_spotify_oauth():
-    return SpotifyOAuth(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
-        redirect_uri='http://127.0.0.1:8000/spotify_temp_redirect', # TODO: don't hardcode
-        scope=['user-read-currently-playing', 'user-modify-playback-state'],
-    )
+# def create_spotify_oauth():
+#     return SpotifyOAuth(
+#         client_id=CLIENT_ID,
+#         client_secret=CLIENT_SECRET,
+#         redirect_uri='http://127.0.0.1:8000/spotify_temp_redirect', # TODO: don't hardcode
+#         scope=['user-read-currently-playing', 'user-modify-playback-state'],
+#     )
 
 
 def main():
