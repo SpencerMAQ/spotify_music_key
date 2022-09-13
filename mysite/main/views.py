@@ -57,6 +57,14 @@ def spotify_view(response):
     return render(response, 'main/spotify.html', context=spotify_info)
 
 
+def spotify_temp_redirect(response):
+    """
+    Temp page where we get the auth code then exchange it for
+    an OAuth Token
+    """
+    # TODO: redirect this to the main spotify page
+    return HttpResponse('temp redirect')
+
 def create_todo(response):
     """
     Create a to-do list

@@ -1,13 +1,17 @@
 import requests
+import spotipy
 import time
 import re
 
 from pprint import pprint
 from collections import OrderedDict
+from spotipy.oauth2 import SpotifyOAuth
+
+from ._secret_info import CLIENT_ID, CLIENT_SECRET
 
 
 SPOTIFY_GET_CURRENT_TRACK_URL = 'https://api.spotify.com/v1/me/player/currently-playing'
-ACCESS_TOKEN = 'BQAzdWyDwIkNUMaC5QcQEt8mPumxc4kXPasb_lERv7xEPrflDWNcfw-f3jtQLj0JS4yKzevza9QGBaDCTjtjPszVy6RF5sN2sZZ-QfnE7CuM4sNYOVNUREYFQNtaj7wyUiHJJ-GNL4-GgW57XZ58_1pTczP_NZ_XVkL8jL9LIlJ5lq4ZLHQoUxSl-6OJT1vhyxKm7YuZ'
+ACCESS_TOKEN = 'BQCrwuEMO9htK36eV7trWP9o3iwjpCI5IjA3Nu3cCvgvdaRMyj02Akmwt_XoxVHr5So0c5rGN_QvQGl-Oqa7pYTC67kqxncu2Ym0dRBfE-tlX3C48gGo5vGYZnFXXjO-f5K7DtUrYoCuTqznQzN2kZMzhdZzXKVcdwTZoDypBSx8YFZYpjl5BLZevvx8kwh_csr1xWwj'
 KEY_MAP = {
     -1: 'No Key Detected',
     0: 'C',
@@ -112,13 +116,13 @@ def get_theory_info(track_id: int) -> dict or None:
     return info
 
 
-# def create_spotify_oauth():
-#     return SpotifyOAuth(
-#         client_id='9f02cc6a5c9341b0be33ee481fcf77ce',
-#         client_secret='62b96979822148ed833854e7cb74d079',
-#         redirect_uri='http://127.0.0.1:8000/spotify', # TODO: don't hardcode
-#         scope=['user-read-currently-playing', 'user-modify-playback-state'],
-#     )
+def create_spotify_oauth():
+    return SpotifyOAuth(
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        redirect_uri='http://127.0.0.1:8000/spotify', # TODO: don't hardcode
+        scope=['user-read-currently-playing', 'user-modify-playback-state'],
+    )
 
 
 def main():
