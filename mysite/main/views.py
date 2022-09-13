@@ -77,7 +77,8 @@ def spotify_view(response):
 
     print(sp_token_django_obj.expires_at - time.time()) # TODO: delete this, just debugging stuff
     print(sp_token_django_obj)
-    sp = spotipy.Spotify(auth=sp_token_django_obj.access_token)
+    sp = spotipy.Spotify(auth=sp_token_django_obj.access_token,
+                         requests_timeout=10)
     current_track_info = get_current_track_info(sp.current_user_playing_track())
 
     # current_track_theory_info = {}
