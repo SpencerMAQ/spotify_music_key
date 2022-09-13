@@ -72,6 +72,7 @@ def get_current_track_info(json_info: dict) -> dict or None:
 
     return current_track_info
 
+
 def get_theory_info(json_info: dict) -> dict or None:
     """
     Args:
@@ -91,15 +92,6 @@ def get_theory_info(json_info: dict) -> dict or None:
     }
 
     return info
-
-
-# def create_spotify_oauth():
-#     return SpotifyOAuth(
-#         client_id=CLIENT_ID,
-#         client_secret=CLIENT_SECRET,
-#         redirect_uri='http://127.0.0.1:8000/spotify_temp_redirect', # TODO: don't hardcode
-#         scope=['user-read-currently-playing', 'user-modify-playback-state'],
-#     )
 
 
 def main():
