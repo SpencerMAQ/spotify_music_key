@@ -43,7 +43,7 @@ def spotify_temp_redirect(response):
 
     if not response.session.exists(response.session.session_key):
         response.session.create()
-
+    print('dasdsa', sp_access_token_dict)
     update_or_create_user_tokens(
         session_id=response.session.session_key,
         access_token=sp_access_token_dict.get('access_token'),
@@ -56,8 +56,8 @@ def spotify_temp_redirect(response):
 
 
 def spotify_logout(response):
-    session_id = response.session.session_key
-    logout_and_delete_spotify_tokens(session_id=session_id)
+    # session_id = response.session.session_key
+    logout_and_delete_spotify_tokens()
 
     return render(response, 'main/spotify_logout.html', context={})
 
@@ -70,21 +70,23 @@ def spotify_view(response):
         spotify_info = {'artist': 'You are not logged into Spotify'}
         return render(response, 'main/spotify.html', context=spotify_info)
 
+    print(f'valid or not: {is_spotify_token_still_valid(session_id=session_id)}')
     if not is_spotify_token_still_valid(session_id=session_id):
         refresh_spotify_token(session_id=session_id)
         sp_token_django_obj = get_user_tokens(session_id=session_id)
 
     print(sp_token_django_obj.expires_at - time.time()) # TODO: delete this, just debugging stuff
-    sp = spotipy.Spotify(auth = sp_token_django_obj.access_token)
+    print(sp_token_django_obj)
+    sp = spotipy.Spotify(auth=sp_token_django_obj.access_token)
     current_track_info = get_current_track_info(sp.current_user_playing_track())
 
-    current_track_theory_info = {}
+    # current_track_theory_info = {}
     if current_track_info:
         id = sp.current_user_playing_track().get('item').get('id')
         current_track_theory_info = sp.audio_analysis(track_id=id)
         current_track_theory_info = get_theory_info(current_track_theory_info)
 
-    if response and current_track_info:
+    # if response and current_track_info:
         artist = current_track_info.get('artists')
         first_artist = current_track_info.get('first_artist')
         track = current_track_info.get('track_name')

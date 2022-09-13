@@ -39,7 +39,7 @@ def update_or_create_user_tokens(session_id, access_token, expires_in, expires_a
             refresh_token=refresh_token
         )
         sp_token_django_obj.save()
-    print(sp_token_django_obj)
+    # print(sp_token_django_obj)
 
 
 def is_spotify_token_still_valid(session_id) -> bool:
@@ -61,11 +61,11 @@ def is_spotify_token_still_valid(session_id) -> bool:
 
     return False
 
+
 def refresh_spotify_token(session_id):
     """
-    Only use if there is already an existing token
-    but has expired
-    Don't use if the user hasn't logged in in the first place
+    Only use if there is already an existing token but has expired
+    Don't use if the user hasn't logged-in in the first place
     """
     sp_token_django_obj = get_user_tokens(session_id=session_id)
     refresh_token = sp_token_django_obj.refresh_token
@@ -80,9 +80,20 @@ def refresh_spotify_token(session_id):
                                  refresh_token=new_sp_token_dict.get('refresh_token')
                                  )
 
-def logout_and_delete_spotify_tokens(session_id):
-    user_tokens = SpotifyToken.objects.filter(user=session_id)
+
+def logout_and_delete_spotify_tokens(session_id = None):
+    """
+    Delete objects from a specified user/session ID
+    If no session ID is specified, then delete all tokens from the DB
+    """
+    # TODO: check the last logged in of each session periodically,
+    # if a session hasn't logged-in in a week, delete them from DB
+    if session_id:
+        user_tokens = SpotifyToken.objects.filter(user=session_id)
+    else:
+        user_tokens = SpotifyToken.objects.all()
     user_tokens.delete()
+
 
 def create_spotify_oauth():
     """
