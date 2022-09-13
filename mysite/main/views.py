@@ -86,7 +86,7 @@ def spotify_view(response):
         current_track_theory_info = sp.audio_analysis(track_id=id)
         current_track_theory_info = get_theory_info(current_track_theory_info)
 
-    # if response and current_track_info:
+    # if response and current_track_info: # TODO: error handling if response contains and error or smthn
         artist = current_track_info.get('artists')
         first_artist = current_track_info.get('first_artist')
         track = current_track_info.get('track_name')

@@ -4,7 +4,7 @@
 
 {% block content %}
     <br>
-    {% if album_art %}<img src="{{album_art}}" alt="home" class="album_art">{% endif %}
+    {% if album_art %}<img src="{{album_art}}" alt="home" class="album_art" id="al_art">{% endif %}
     <h2>{{track}}</h2>
     <h6>{{artist}}</h6>
     {% if key %}
@@ -15,7 +15,7 @@
         {% if key_confidence %}<h6>{{key_confidence}}%</h6>{% endif %}
     </details>
     {% endif %}
-
+    <span id="test"></span>
     <br><br>
 
     <a href="https://tunebat.com/Search?q={{first_artist}}+{{track_name_for_searching}}">tunebat</a><br>
@@ -25,5 +25,20 @@
 
     {% load static %}
     <img src="{% static "main/media/circle_5.jpg" %}" alt="home" class="fifths"/>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+    var songTitle = document.getElementById("test");
+    var ctr = 0;
+
+    const interval = setInterval(function () {
+        ctr++
+        songTitle.innerHTML = ctr;
+    }, 2000);
+
+</script>
 
 {% endblock %}
