@@ -43,15 +43,18 @@
     var progressMS;
     var durationMS;
 
+    var playState = null;
+
     function isSomethingPlayingOrNot() {
         // console.log('hello') - works
        $.ajax({
             type:'GET',
             url: 'http://127.0.0.1:8000/ajax_spotify_track_info/',
             success: function (data) {
-                // console.log(data['is_playing'])
-                console.log(data['is_playing'])
-                alert('success')
+                // console.log(data['is_playing']);
+                // console.log(data['is_playing']);
+                // alert(`play state: ${data['is_playing']}`);
+                playState = data['is_playing'];
                 if (data['is_playing'] == null || data['is_playing'] == false) {
                     playButton.innerHTML = 'Play';
                 } else {
@@ -63,7 +66,7 @@
                 // spotipy.exceptions.SpotifyException: http status: 403, code:-1
                 // Player command failed: Restriction violated, reason: UNKNOWN
                 // console.log('error')
-                alert('error')
+                alert(`ERROR, play state: ${data['is_playing']}`);
                 playButton.innerHTML = 'Pause';
             }
         })
