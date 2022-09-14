@@ -8,7 +8,8 @@
     <h2 id="track-title">{{track}}</h2>
     <h6 id="artist-name">{{artist}}</h6>
     <div>
-        <button id="play-button"></button>
+        <button id="play-button"></button> <button id="pause-loop" onclick="stop();">Pause Infinite Loop</button>
+        <button id="resume-loop" onclick="resumeLoop();">Resume Infinite Loop</button>
     </div>
     {% if key %}
     <br>
@@ -33,7 +34,7 @@
 
 {% block scripts %}
 <script>
-    var testSongTitle = document.getElementById("test");
+    // var testSongTitle = document.getElementById("test");
 
     var mainSongTitle = document.getElementById('track-title');
     var artistName = document.getElementById('artist-name');
@@ -79,7 +80,7 @@
                 var curTrack = data['track'].toString();
                 var prevTrack = mainSongTitle.innerHTML.toString();
                 if (curTrack !== prevTrack) {
-                    testSongTitle.innerHTML = curTrack;
+                    // testSongTitle.innerHTML = curTrack;
                     mainSongTitle.innerHTML = curTrack;
                     artistName.innerHTML = data['artist'];
                     keySignature.innerHTML = data['key'];
@@ -93,9 +94,27 @@
             })
     };
 
+    // var pauseLoopButton = document.getElementById('pause-loop');
+    // pauseLoopButton.addEventListener('click', infiniteLoop);
+    // pauseLoopButton.myParam = true;
+
+    // https://stackoverflow.com/questions/62841857/how-do-i-stop-a-while-loop-with-a-button-javascript
+    var flag = true;
+
+    function stop () {
+        flag = false;
+        console.log('inf loop has been paused');
+    };
+
+    function resumeLoop () {
+        flag = true;
+        console.log('inf loop has been RESUMED');
+    };
+
     // TODO: a button to stop/restart the infinite loop
-    async function infiniteLoop() {
-        while (true) {
+    async function infiniteLoop(evt) {
+        var ctr = 0;
+        while (flag) {
             await playingOrNot2()
                 .then(data => {
                     // curSong = data['track'];
@@ -103,8 +122,17 @@
                 .catch(function (data) {
                     console.log('error from playingOrNot2 function call');
                 });
-            await sleep(13000);
-            console.log('sleeping zzzz')
+            await sleep(5000);
+            console.log('sleeping zzzz');
+            // try {
+            //     if (evt.currentTarget.myParam) {
+            //         await sleep(5000);
+            //         console.log('stopping inf loop');
+            //         break;
+            //     }
+            // } catch (err) {
+            //     console.log('inf not yet topping hehe')
+            // }
         }
     };
     infiniteLoop();
