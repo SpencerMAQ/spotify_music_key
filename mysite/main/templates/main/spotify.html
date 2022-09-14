@@ -45,7 +45,8 @@
 
     var playButton = document.getElementById("play-button");
 
-
+    // launched at the start of loading the webpage
+    // only checks if there's something playing or not, then sets the button name appropriately
     function isSomethingPlayingOrNot() {
        $.ajax({
             type:'GET',
@@ -94,9 +95,6 @@
             })
     };
 
-    // var pauseLoopButton = document.getElementById('pause-loop');
-    // pauseLoopButton.addEventListener('click', infiniteLoop);
-    // pauseLoopButton.myParam = true;
 
     // https://stackoverflow.com/questions/62841857/how-do-i-stop-a-while-loop-with-a-button-javascript
     var flag = true;
@@ -108,10 +106,10 @@
 
     function resumeLoop () {
         flag = true;
+        infiniteLoop();
         console.log('inf loop has been RESUMED');
     };
 
-    // TODO: a button to stop/restart the infinite loop
     async function infiniteLoop(evt) {
         var ctr = 0;
         while (flag) {
@@ -122,17 +120,8 @@
                 .catch(function (data) {
                     console.log('error from playingOrNot2 function call');
                 });
-            await sleep(5000);
+            await sleep(10000);
             console.log('sleeping zzzz');
-            // try {
-            //     if (evt.currentTarget.myParam) {
-            //         await sleep(5000);
-            //         console.log('stopping inf loop');
-            //         break;
-            //     }
-            // } catch (err) {
-            //     console.log('inf not yet topping hehe')
-            // }
         }
     };
     infiniteLoop();
