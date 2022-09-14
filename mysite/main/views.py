@@ -209,3 +209,21 @@ def ajax_pause_play(response):
     return JsonResponse({'a': x})
 
 
+def ajax_next_song(response):
+    session_id = response.session.session_key
+
+    sp_token_django_obj = get_user_tokens(session_id=session_id)
+    if not sp_token_django_obj:
+        return
+
+    if not is_spotify_token_still_valid(session_id=session_id):
+        refresh_spotify_token(session_id=session_id)
+        sp_token_django_obj = get_user_tokens(session_id=session_id)
+
+    sp = spotipy.Spotify(auth=sp_token_django_obj.access_token,
+                         requests_timeout=10)
+
+    sp.next_track()
+
+    # shit expects a json idk bruh
+    return JsonResponse({})

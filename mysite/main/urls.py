@@ -12,6 +12,7 @@ urlpatterns = [
     path('spotify_temp_redirect/', views.spotify_temp_redirect, name='spotify_temp_redirect'),
     path('ajax_spotify_track_info/', views.ajax_spotify_track_info, name='ajax_spotify_track_info'),
     path('ajax_pause_play/', views.ajax_pause_play, name='ajax_pause_play'),
+    path('ajax_next_song/', views.ajax_next_song, name='ajax_next_song'),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
