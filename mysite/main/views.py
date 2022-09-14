@@ -132,23 +132,53 @@ def ajax_spotify_track_info(response):
 
     sp = spotipy.Spotify(auth=sp_token_django_obj.access_token,
                          requests_timeout=10)
-    current_track_info = sp.current_user_playing_track()
+    current_track_info = get_current_track_info(sp.current_user_playing_track())
+    if current_track_info:
+        id = sp.current_user_playing_track().get('item').get('id')
+
+    # and id because i get and error if the song is a local track (i.e. no ID)
+    if current_track_info and id:
+
+        current_track_theory_info = sp.audio_analysis(track_id=id)
+        current_track_theory_info = get_theory_info(current_track_theory_info)
+
+        # if response and current_track_info: # TODO: error handling if response contains and error or smthn
+        artist = current_track_info.get('artists')
+        first_artist = current_track_info.get('first_artist')
+        track = current_track_info.get('track_name')
+        track_name_for_searching = current_track_info.get('track_name_for_searching')
+        key = current_track_theory_info.get('key')
+        mode = current_track_theory_info.get('mode')
+        key_confidence = current_track_theory_info.get('key_confidence')
+        if key_confidence: key_confidence = round(key_confidence, 2)
+
+        album_art = current_track_info.get('album_art')
+
+        spotify_info = OrderedDict({
+            'artist': artist,
+            'track': track,
+            'key': key,
+            'key_confidence': key_confidence,
+            'mode': mode,
+            'first_artist': first_artist,
+            'track_name_for_searching': track_name_for_searching,
+            'album_art': album_art,
+            'is_playing': current_track_info.get('is_playing')
+        })
+
+    else:
+        spotify_info = {'artist': 'No song currently playing'}
+
 
     # TODO: test when no track is playing
-    ajax_info = {}
-    if current_track_info:
-        ajax_info = {
-            'progress_ms': current_track_info.get('progress_ms', None),
-            'duration_ms': current_track_info.get('item').get('duration_ms', None),
-            'is_playing': current_track_info.get('is_playing'),
-            'track': current_track_info.get('item').get('name')
-        }
+    # ajax_info = get_current_track_info(current_track_info)
     # print(current_track_info.get('progress_ms'))
     # print(type(current_track_info.get('progress_ms')))
     # x = sp.start_playback()
-    # print(ajax_info.get('is_playing'))
+    print('playing or not: ', spotify_info.get('is_playing'))
+    # print('track: ', spotify_info.get('artist'))
     # print(x)
-    return JsonResponse(ajax_info)
+    return JsonResponse(spotify_info)
 
 def ajax_pause_play(response):
     """

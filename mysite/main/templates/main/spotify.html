@@ -5,8 +5,8 @@
 {% block content %}
     <br>
     {% if album_art %}<img src="{{album_art}}" alt="home" class="album_art" id="al_art">{% endif %}
-    <h2>{{track}}</h2>
-    <h6>{{artist}}</h6>
+    <h2 id="track-title">{{track}}</h2>
+    <h6 id="artist-name">{{artist}}</h6>
     <div>
         <button id="play-button"></button>
     </div>
@@ -14,8 +14,8 @@
     <br>
     <details open class="definition-field">
         <summary class="definition-title">Reveal/Hide Key</summary>
-        <h4>{{key}} {{mode}}</h4>
-        {% if key_confidence %}<h6>{{key_confidence}}%</h6>{% endif %}
+        <h4 id="key-signature">{{key}}</h4> <h4 id="music-mode">{{mode}}</h4>
+        {% if key_confidence %}<h6 id="key-confidence">{{key_confidence}}%</h6>{% endif %}
     </details>
     {% endif %}
     <span id="test"></span>
@@ -33,27 +33,23 @@
 
 {% block scripts %}
 <script>
-    var songTitle = document.getElementById("test");
+    var testSongTitle = document.getElementById("test");
+
+    var mainSongTitle = document.getElementById('track-title');
+    var artistName = document.getElementById('artist-name');
+    var albumArt = document.getElementById('al_art');
+    var keySignature = document.getElementById('key-signature');
+    var keyConfidence = document.getElementById('key-confidence');
+    var musicMode = document.getElementById('music-mode');
+
     var playButton = document.getElementById("play-button");
 
-    var lastPlayedSong = ''
-    var ctr = 0;
-
-    var pauseInterval = 5000;
-    var progressMS;
-    var durationMS;
-
-    var playState = null;
 
     function isSomethingPlayingOrNot() {
-        // console.log('hello') - works
        $.ajax({
             type:'GET',
             url: 'http://127.0.0.1:8000/ajax_spotify_track_info/',
             success: function (data) {
-                // console.log(data['is_playing']);
-                // console.log(data['is_playing']);
-                // alert(`play state: ${data['is_playing']}`);
                 playState = data['is_playing'];
                 if (data['is_playing'] == null || data['is_playing'] == false) {
                     playButton.innerHTML = 'Play';
@@ -71,12 +67,50 @@
             }
         })
     };
-    // playButton.addEventListener('load', isSomethingPlayingOrNot)
     isSomethingPlayingOrNot();
 
+    function playingOrNot2 () {
+        return  fetch('http://127.0.0.1:8000/ajax_spotify_track_info')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                // console.log(`data: ${data}`)
+                var curTrack = data['track'].toString();
+                var prevTrack = mainSongTitle.innerHTML.toString();
+                if (curTrack !== prevTrack) {
+                    testSongTitle.innerHTML = curTrack;
+                    mainSongTitle.innerHTML = curTrack;
+                    artistName.innerHTML = data['artist'];
+                    keySignature.innerHTML = data['key'];
+                    keyConfidence.innerHTML = data['key_confidence'];
+                    musicMode.innerHTML = data['mode'];
+                    albumArt.setAttribute('src', data['album_art']);
+                }
+            })
+            .catch(function (data) {
+                console.log('playingOrNot2 ERROR IDK', data);
+            })
+    };
+
+    // TODO: a button to stop/restart the infinite loop
+    async function infiniteLoop() {
+        while (true) {
+            await playingOrNot2()
+                .then(data => {
+                    // curSong = data['track'];
+                })
+                .catch(function (data) {
+                    console.log('error from playingOrNot2 function call');
+                });
+            await sleep(13000);
+            console.log('sleeping zzzz')
+        }
+    };
+    infiniteLoop();
+
+
     playButton.addEventListener('click', z)
-        // what happens if I click the button
-        // if button is paused, only check play status after 100s
     function z() {
         if (playButton.innerHTML == 'Play') {
             playButton.innerHTML = 'Pause';
@@ -89,7 +123,6 @@
     };
 
     function spotifyPauseOrPlay(requestBody) {
-        // console.log(`request body: ${JSON.stringify(requestBody)}`)
         $.ajax({
             type:'GET',
             url: 'http://127.0.0.1:8000/ajax_pause_play/',
@@ -97,48 +130,6 @@
             dataType: 'json'
         })
     };
-
-
-
-
-    // TODO: JS pause play button, its functionality must actually pause and play the track
-    // button must update text
-    // would also pause/play the constantly running/sleeping function whenever clicked
-
-    // also check: only update state if the current track has actually changed
-
-    // TODO: include a refresh status button,
-    // because i'd set the function to actually stop running ,if after it sent 5 requests
-    // it received pause or nothing, then stop, only refresh
-    // ORRR try this: check what happens if you PUT request Start/resume playback if something is already playing
-    // will it simply continue? if then, then that's ok
-
-    // function timeout() {
-    // var interval = setInterval(function () {
-    //     // ctr++;
-    //     fetch('http://127.0.0.1:8000/ajax_spotify_track_info')
-    //         .then(function (response) {
-    //             return response.json();
-    //         })
-    //         .then(function (data) {
-    //             songTitle.innerHTML = data['track'];
-    //             progressMS = data['progress_ms'];
-    //             durationMS = data['duration_ms'];
-    //             pauseInterval = durationMS - progressMS;
-    //             // console.log(pauseInterval)
-    //             if (pauseInterval > 100000) {
-    //                 pauseInterval = 100000;
-    //             }
-    //         })
-    //         .catch(function (data) {
-    //             console.log('BOO ERROR IDK', data);
-    //         })
-    //     pauseInterval = durationMS - progressMS;
-    //     console.log(pauseInterval)
-    // }, pauseInterval);
-    // };
-
-    // timeout();
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));

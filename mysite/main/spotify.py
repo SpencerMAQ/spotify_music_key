@@ -46,7 +46,6 @@ def get_current_track_info(json_info: dict) -> dict or None:
 
     json_resp: dict = json_info
 
-    track_id = json_resp.get('item').get('id')
     track_name = json_resp.get('item').get('name')
     track_name_for_searching = re.sub(r'\(.*?\)', r'', track_name)
 
@@ -56,18 +55,19 @@ def get_current_track_info(json_info: dict) -> dict or None:
     artists = [artist for artist in json_resp.get('item').get('artists')]
     first_artist = artists[0].get('name')
 
-    link = json_resp.get('item').get('external_urls').get('spotify')
-
     artist_names = ', '.join([artist.get('name') for artist in artists])
 
     current_track_info = OrderedDict({
-        "id": track_id,
+        "id": json_resp.get('item').get('id'),
         "track_name": track_name,
         "artists": artist_names,
-        "link": link,
+        "link": json_resp.get('item').get('external_urls').get('spotify'),
         'first_artist': first_artist,
         'track_name_for_searching': track_name_for_searching,
-        'album_art': album_art
+        'album_art': album_art,
+        'progress_ms': json_resp.get('progress_ms', None),
+        'duration_ms': json_resp.get('item').get('duration_ms', None),
+        'is_playing': json_resp.get('is_playing')
     })
 
     return current_track_info
