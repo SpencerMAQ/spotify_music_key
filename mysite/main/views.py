@@ -1,7 +1,8 @@
 from collections import OrderedDict
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+
 
 import spotipy
 from .sp_token_utils import (update_or_create_user_tokens,
@@ -80,9 +81,12 @@ def spotify_view(response):
     sp = spotipy.Spotify(auth=sp_token_django_obj.access_token,
                          requests_timeout=10)
     current_track_info = get_current_track_info(sp.current_user_playing_track())
-
     if current_track_info:
         id = sp.current_user_playing_track().get('item').get('id')
+
+    # and id because i get and error if the song is a local track (i.e. no ID)
+    if current_track_info and id:
+
         current_track_theory_info = sp.audio_analysis(track_id=id)
         current_track_theory_info = get_theory_info(current_track_theory_info)
 
@@ -113,3 +117,65 @@ def spotify_view(response):
         spotify_info = {'artist': 'No song currently playing'}
 
     return render(response, 'main/spotify.html', context=spotify_info)
+
+def ajax_spotify_track_info(response):
+    # https://koenwoortman.com/python-django-view-return-json-response/#:~:text=The%20JsonResponse%20transforms%20the%20data,to%20be%20transformed%20to%20JSON.
+    session_id = response.session.session_key
+
+    sp_token_django_obj = get_user_tokens(session_id=session_id)
+    if not sp_token_django_obj:
+        return JsonResponse({})
+
+    if not is_spotify_token_still_valid(session_id=session_id):
+        refresh_spotify_token(session_id=session_id)
+        sp_token_django_obj = get_user_tokens(session_id=session_id)
+
+    sp = spotipy.Spotify(auth=sp_token_django_obj.access_token,
+                         requests_timeout=10)
+    current_track_info = sp.current_user_playing_track()
+
+    # TODO: test when no track is playing
+    ajax_info = {}
+    if current_track_info:
+        ajax_info = {
+            'progress_ms': current_track_info.get('progress_ms', None),
+            'duration_ms': current_track_info.get('item').get('duration_ms', None),
+            'is_playing': current_track_info.get('is_playing'),
+            'track': current_track_info.get('item').get('name')
+        }
+    # print(current_track_info.get('progress_ms'))
+    # print(type(current_track_info.get('progress_ms')))
+    # x = sp.start_playback()
+    # print(ajax_info.get('is_playing'))
+    # print(x)
+    return JsonResponse(ajax_info)
+
+def ajax_pause_play(response):
+    """
+    pauses or plays the current track from JS
+    based on click events from JS
+    """
+    status_to_send_to_sp = response.GET.get('status_to_send_to_sp')
+    # print(status_to_send_to_sp)
+    session_id = response.session.session_key
+
+    sp_token_django_obj = get_user_tokens(session_id=session_id)
+    if not sp_token_django_obj:
+        return
+
+    if not is_spotify_token_still_valid(session_id=session_id):
+        refresh_spotify_token(session_id=session_id)
+        sp_token_django_obj = get_user_tokens(session_id=session_id)
+
+    sp = spotipy.Spotify(auth=sp_token_django_obj.access_token,
+                         requests_timeout=10)
+    x = None
+    if status_to_send_to_sp == 'play':
+        x = sp.start_playback()
+    elif status_to_send_to_sp == 'pause':
+        x = sp.pause_playback()
+
+
+    return JsonResponse({'a': x})
+
+
