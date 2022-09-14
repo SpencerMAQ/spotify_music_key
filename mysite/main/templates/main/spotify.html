@@ -8,7 +8,9 @@
     <h2 id="track-title">{{track}}</h2>
     <h6 id="artist-name">{{artist}}</h6>
     <div>
-        <button id="play-button"></button> <button id="pause-loop" onclick="stop();">Pause Infinite Loop</button>
+        <button id="play-button"></button> &nbsp;&nbsp; <button id="next-button">»</button>
+        <br>
+        <button id="pause-loop" onclick="stop();">Pause Infinite Loop</button>
         <button id="resume-loop" onclick="resumeLoop();">Resume Infinite Loop</button>
     </div>
     {% if key %}
@@ -34,6 +36,7 @@
 
 {% block scripts %}
 <script>
+    // TODO: JS still fucks up when the track being played is local
     // var testSongTitle = document.getElementById("test");
 
     var mainSongTitle = document.getElementById('track-title');
@@ -44,6 +47,21 @@
     var musicMode = document.getElementById('music-mode');
 
     var playButton = document.getElementById("play-button");
+    var nextButton = document.getElementById('next-button');
+    nextButton.addEventListener('click', spotifyNextSong);
+
+    function spotifyNextSong() {
+        fetch('http://127.0.0.1:8000/ajax_next_song/')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+
+            })
+            .catch(function (data) {
+                console.log('spotifyNextSong ERROR', data);
+            })
+    };
 
     // launched at the start of loading the webpage
     // only checks if there's something playing or not, then sets the button name appropriately
@@ -78,7 +96,7 @@
             })
             .then(function (data) {
                 // console.log(`data: ${data}`)
-                var curTrack = data['track'].toString();
+                var curTrack = data['track'];
                 var prevTrack = mainSongTitle.innerHTML.toString();
                 if (curTrack !== prevTrack) {
                     // testSongTitle.innerHTML = curTrack;
@@ -88,6 +106,7 @@
                     keyConfidence.innerHTML = data['key_confidence'];
                     musicMode.innerHTML = data['mode'];
                     albumArt.setAttribute('src', data['album_art']);
+                    console.log('track has changed')
                 }
             })
             .catch(function (data) {
