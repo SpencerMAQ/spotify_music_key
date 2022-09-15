@@ -5,8 +5,8 @@
 {% block content %}
     <br>
     {% if album_art %}<img src="{{album_art}}" alt="home" class="album_art" id="al_art">{% endif %}
-    <h2 id="track-title">{{track}}</h2>
-    <h6 id="artist-name">{{artist}}</h6>
+    <h2 id="track-title">{{track}}(Track)</h2>
+    <h6 id="artist-name">{{artist}}(Artist)</h6>
     <div>
         <button id="play-button"></button> &nbsp;&nbsp; <button id="next-button">»</button>
         <br>
@@ -17,17 +17,17 @@
     <br>
     <details open class="definition-field">
         <summary class="definition-title">Reveal/Hide Key</summary>
-        <h4 id="key-signature">{{key}}</h4> <h4 id="music-mode">{{mode}}</h4>
+        <h4 id="key-signature">{{key}}(Key)</h4> <h4 id="music-mode">{{mode}}(Mode)</h4>
         {% if key_confidence %}<h6 id="key-confidence">{{key_confidence}} %</h6>{% endif %}
     </details>
     {% endif %}
     <span id="test"></span>
     <br><br>
 
-    <a href="https://tunebat.com/Search?q={{first_artist}}+{{track_name_for_searching}}">tunebat</a><br>
-    <a href="https://www.notediscover.com/search?q={{first_artist}}+{{track_name_for_searching}}">notediscover</a><br>
-    <a href="https://chordify.net/search/{{first_artist}}+{{track_name_for_searching}}">chordify(requires login)</a><br>
-    <a href="https://www.ultimate-guitar.com/search.php?search_type=title&value={{first_artist}}+{{track_name_for_searching}}">ultimate guitar</a>
+    <a href="https://tunebat.com/Search?q={{first_artist}}+{{track_name_for_searching}}" id="tunebat">tunebat</a><br>
+    <a href="https://www.notediscover.com/search?q={{first_artist}}+{{track_name_for_searching}}" id="notediscover">notediscover</a><br>
+    <a href="https://chordify.net/search/{{first_artist}}+{{track_name_for_searching}}" id="chordify">chordify(requires login)</a><br>
+    <a href="https://www.ultimate-guitar.com/search.php?search_type=title&value={{first_artist}}+{{track_name_for_searching}}" id="u-guitar">ultimate guitar</a>
 
     {% load static %}
     <img src="{% static "main/media/circle_5.jpg" %}" alt="home" class="fifths"/>
@@ -45,6 +45,13 @@
     var keySignature = document.getElementById('key-signature');
     var keyConfidence = document.getElementById('key-confidence');
     var musicMode = document.getElementById('music-mode');
+
+    var tuneBat = document.getElementById('tunebat');
+    var noteDiscover = document.getElementById('notediscover');
+    var chordify = document.getElementById('chordify');
+    var ultimateGuitar = document.getElementById('u-guitar');
+
+    // var tunebatLink = `https://tunebat.com/Search?q=${}+${}`;
 
     var playButton = document.getElementById("play-button");
     var nextButton = document.getElementById('next-button');
@@ -106,6 +113,12 @@
                     keyConfidence.innerHTML = data['key_confidence'];
                     musicMode.innerHTML = data['mode'];
                     albumArt.setAttribute('src', data['album_art']);
+
+                    tuneBat.setAttribute('href', `https://tunebat.com/Search?q=${data['first_artist']}+${curTrack}`);
+                    noteDiscover.setAttribute('href', `https://www.notediscover.com/search?q=${data['first_artist']}+${curTrack}`);
+                    chordify.setAttribute('href', `https://chordify.net/search/${data['first_artist']}+${curTrack}`);
+                    ultimateGuitar.setAttribute('href', `https://www.ultimate-guitar.com/search.php?search_type=title&value=${data['first_artist']}+${curTrack}`);
+
                     console.log('track has changed into:', curTrack, 'by ', data['artist'], data['key'], data['key_confidence'])
                 }
             })
