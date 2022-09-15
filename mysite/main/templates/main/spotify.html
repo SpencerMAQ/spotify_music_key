@@ -18,7 +18,7 @@
     <details open class="definition-field">
         <summary class="definition-title">Reveal/Hide Key</summary>
         <h4 id="key-signature">{{key}}</h4> <h4 id="music-mode">{{mode}}</h4>
-        {% if key_confidence %}<h6 id="key-confidence">{{key_confidence}}%</h6>{% endif %}
+        {% if key_confidence %}<h6 id="key-confidence">{{key_confidence}} %</h6>{% endif %}
     </details>
     {% endif %}
     <span id="test"></span>
@@ -106,7 +106,7 @@
                     keyConfidence.innerHTML = data['key_confidence'];
                     musicMode.innerHTML = data['mode'];
                     albumArt.setAttribute('src', data['album_art']);
-                    console.log('track has changed')
+                    console.log('track has changed into:', curTrack, 'by ', data['artist'], data['key'], data['key_confidence'])
                 }
             })
             .catch(function (data) {
