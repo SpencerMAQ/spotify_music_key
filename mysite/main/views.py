@@ -40,6 +40,9 @@ def spotify_temp_redirect(response):
     code = response.GET.get('code')
     error = response.GET.get('error') # TODO
 
+    # DeprecationWarning: You're using 'as_dict = True'.get_access_token will return the token string directly in future versions.
+    # Please adjust your code accordingly, or use get_cached_token instead.
+    #   spotify_token = sp_oauth.get_access_token(code=code)
     sp_access_token_dict: dict = sp_oauth.get_access_token(code=code)
 
     if not response.session.exists(response.session.session_key):
