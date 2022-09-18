@@ -32,6 +32,11 @@
     {% load static %}
     <img src="{% static "main/media/circle_5.jpg" %}" alt="home" class="fifths"/>
 
+    <details open id="guitar-scale-container">
+        <summary>Show/Hide Guitar Scale Chart</summary>
+        <img src="" id="guitar-scale-img">
+    </details>
+
 {% endblock %}
 
 {% block scripts %}
@@ -46,7 +51,7 @@
     var keyConfidence = document.getElementById('key-confidence');
     var musicMode = document.getElementById('music-mode');
 
-    var details = document.querySelector('.definition-field');
+    // var details = document.querySelector('.definition-field');
 
     var tuneBat = document.getElementById('tunebat');
     var noteDiscover = document.getElementById('notediscover');
@@ -56,6 +61,37 @@
     var playButton = document.getElementById("play-button");
     var nextButton = document.getElementById('next-button');
     nextButton.addEventListener('click', spotifyNextSong);
+
+    var guitarScaleDiv = document.getElementById('guitar-scale-container');
+    var guitarScaleImg = document.getElementById('guitar-scale-img');
+
+    const keyImageMap = {
+        'C Major'       : "{% static 'main/media/c_major_full_letters.png' %}",
+        'C♯/D♭ Major'  : "{% static 'main/media/db_major_full.png' %}",
+        'D Major'       : "{% static 'main/media/d_major_full_letters.png' %}",
+        'D♯/E♭ Major'  : "{% static 'main/media/eb_major_full_letters.png' %}",
+        'E Major'       : "{% static 'main/media/e_major_full_letters.png' %}",
+        'F Major'       : "{% static 'main/media/f_major_full.png' %}",
+        'F♯/G♭ Major'  : "{% static 'main/media/fsharp_major_full_letters.png' %}",
+        'G Major'       : "{% static 'main/media/g_major_full.png' %}",
+        'G♯/A♭ Major'  : "{% static 'main/media/gsharp_major_full_letters.png' %}",
+        'A Major'       : "{% static 'main/media/a_major_full.png' %}",
+        'A♯/B♭ Major'  : "{% static 'main/media/asharp_major_full_letters.png' %}",
+        'B Major'       : "{% static 'main/media/b_major_full.png' %}",
+
+        'C minor'       : "{% static 'main/media/c_minor_letters.png' %}",
+        'C♯/D♭ minor'  : "{% static 'main/media/csharp_minor_letters.png' %}",
+        'D minor'       : "{% static 'main/media/d_minor_full.png' %}",
+        'D♯/E♭ minor'  : "{% static 'main/media/dsharp_minor_letters.png' %}",
+        'E minor'       : "{% static 'main/media/e_minor_letters.png' %}",
+        'F minor'       : "{% static 'main/media/f_minor_letters.png' %}",
+        'F♯/G♭ minor'  : "{% static 'main/media/fsharp_minor_letters.png' %}",
+        'G minor'       : "{% static 'main/media/g_minor_letters.png' %}",
+        'G♯/A♭ minor'  : "{% static 'main/media/gsharp_minor_letters.png' %}",
+        'A minor'       : "{% static 'main/media/a_minor_full.png' %}",
+        'A♯/B♭ minor'  : "{% static 'main/media/asharp_minor_letters.png' %}",
+        'B minor'       : "{% static 'main/media/b_minor_letters.png' %}"
+    }
 
     function spotifyNextSong() {
         fetch('http://127.0.0.1:8000/ajax_next_song/')
@@ -139,6 +175,20 @@
                     }
 
                     albumArt.setAttribute('src', data['album_art']);
+
+                    if (guitarScaleImg) {
+                        guitarScaleImg.setAttribute('src', keyImageMap[data['key'] + ' ' + data['mode']]);
+                        // guitarScaleDiv.appendChild(guitarScaleImg);
+
+                        // guitarScaleDiv.appendChild(document.createTextNode(keyImageMap[data['key'] + ' ' + data['mode']]));
+                    } else {
+                        guitarScaleImg = document.createElement('img');
+                        guitarScaleImg.setAttribute('src', keyImageMap[data['key'] + ' ' + data['mode']]);
+                        guitarScaleDiv.appendChild(guitarScaleImg);
+
+                        // guitarScaleDiv.appendChild(document.createTextNode('scale goes here'));
+                        // guitarScaleDiv.appendChild(document.createTextNode(keyImageMap[data['key'] + ' ' + data['mode']]));
+                    }
 
                     // if (details) {
                         // key = document.createTextNode(keySignature.toString());
