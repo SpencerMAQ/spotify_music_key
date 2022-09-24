@@ -4,102 +4,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style type="text/css">
-        @font-face {
-            font-family: "Noto Sans JP Regular";
-
-            src:
-                local("Noto Sans JP"),
-                url("_NotoSansJP-Regular.otf");
-        }
-
-        :root {
-            --mainBackground: rgb(50, 50, 50);
-            --highlightColor: rgb(249, 85, 151);
-            --fontBlack: rgb(20, 20 ,20);
-        }
-
-        #container {
-            font-family: "Noto Sans JP";
-        }
-
-        .sidenav {
-            height: 100%;
-            width: 160px;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            /* prevents horizontal scrolling */
-            overflow-x: hidden;
-            padding-top: 20px;
-            font-family: "Noto Sans JP";
-        }
-
-        .sidenav a {
-            padding: 6px 8px 6px 16px;
-            text-decoration: none;
-            font-size: 25px;
-            color: #818181;
-            display: block;
-        }
-
-        .sidenav a:hover {
-            color: #f1f1f1;
-        }
-
-        .main_content {
-            margin-left: 160px;
-            padding: 0px 10px;
-        }
-
-        .header {
-            font-family: "Noto Sans JP";
-            font-size: 40px;
-            background-color: #111;
-            color: #818181;
-            padding: 15px 15px 15px 15px;
-        }
-
-        .fifths {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            -webkit-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-        }
-
-        .album_art {
-            max-width: 250px;
-            border-radius: 11px;
-        }
-
-        #play-button {
-            color: white;
-            background-color: var(--highlightColor);
-            padding: 8px 8px 8px 8px;
-            border-radius: 11px;
-            border: none;
-        }
-
-        #pause-loop, #resume-loop {
-            color: white;
-            background-color: rgb(60, 60, 60);
-            padding: 8px 8px 8px 8px;
-            border-radius: 11px;
-            border: none;
-        }
-
-        #next-button {
-            background-color: var(--highlightColor);
-            padding: 8px 8px 8px 8px;
-            border-radius: 11px;
-            border: none;
-            font-size: 15px;
-        }
-
-    </style>
+<!--    <style type="text/css">-->
+<!--    </style>-->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/styles.css' %}">
 
     <title>{% block title %}世界の終わりの風景{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
