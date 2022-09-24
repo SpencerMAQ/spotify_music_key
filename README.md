@@ -1,4 +1,9 @@
-TODO:  
+TODO:
+Now:
+make circle of 5ths/guitar scales only appear as neede (i.e. by the user) similar to how spotify only shows lyrics when the user clicks it
+
+
+Future:
 WEB Player SDK  
 Auto detect change in song, then update only the changed elements (probably involves JS?, so that u won't have to refresh to see changes)  
 Look for Guitar scale charts (other: piano scale charts, chord charts, etc.)  
