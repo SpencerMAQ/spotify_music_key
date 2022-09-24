@@ -4,7 +4,7 @@
 
 {% block content %}
     <br>
-    {% if album_art %}<img src="{{album_art}}" alt="home" class="album_art" id="al_art">{% endif %}
+    <img src="{{album_art}}" alt="home" class="album_art" id="al_art">
     <h2 id="track-title">{{track}}(Track)</h2>
     <h6 id="artist-name">{{artist}}(Artist)</h6>
     <div>
@@ -13,15 +13,15 @@
         <button id="pause-loop" onclick="stop();">Pause Infinite Loop</button>
         <button id="resume-loop" onclick="resumeLoop();">Resume Infinite Loop</button>
     </div>
-    {% if key %}
+
     <br>
-    <details open class="definition-field">
-        <summary class="definition-title">Reveal/Hide Key</summary>
-        <h4 id="key-signature">{{key}}(Key)</h4> <h4 id="music-mode">{{mode}}(Mode)</h4>
-        {% if key_confidence %}<h6 id="key-confidence">{{key_confidence}} %</h6>{% endif %}
-    </details>
-    {% endif %}
-    <span id="test"></span>
+    <div id="key-info-container">
+        <details open class="definition-field">
+            <summary class="definition-title">Reveal/Hide Key</summary>
+            <h4 id="key-signature">{{key}}(Key)</h4> <h4 id="music-mode">{{mode}}(Mode)</h4>
+            <h6 id="key-confidence">{{key_confidence}} %</h6>
+        </details>
+    </div>
     <br><br>
 
     <a href="https://tunebat.com/Search?q={{first_artist}}+{{track_name_for_searching}}" id="tunebat">tunebat</a><br>
@@ -32,16 +32,21 @@
     {% load static %}
     <img src="{% static "main/media/circle_5.jpg" %}" alt="home" class="fifths"/>
 
+    <details open id="guitar-scale-container">
+        <summary>Show/Hide Guitar Scale Chart</summary>
+        <img src="" id="guitar-scale-img">
+    </details>
+
 {% endblock %}
 
 {% block scripts %}
 <script>
     // TODO: JS still fucks up when the track being played is local
-    // var testSongTitle = document.getElementById("test");
 
     var mainSongTitle = document.getElementById('track-title');
     var artistName = document.getElementById('artist-name');
     var albumArt = document.getElementById('al_art');
+
     var keySignature = document.getElementById('key-signature');
     var keyConfidence = document.getElementById('key-confidence');
     var musicMode = document.getElementById('music-mode');
@@ -51,11 +56,40 @@
     var chordify = document.getElementById('chordify');
     var ultimateGuitar = document.getElementById('u-guitar');
 
-    // var tunebatLink = `https://tunebat.com/Search?q=${}+${}`;
-
     var playButton = document.getElementById("play-button");
     var nextButton = document.getElementById('next-button');
     nextButton.addEventListener('click', spotifyNextSong);
+
+    var guitarScaleDiv = document.getElementById('guitar-scale-container');
+    var guitarScaleImg = document.getElementById('guitar-scale-img');
+
+    const keyImageMap = {
+        'C Major'       : "{% static 'main/media/c_major_full_letters.png' %}",
+        'C♯/D♭ Major'  : "{% static 'main/media/db_major_full.png' %}",
+        'D Major'       : "{% static 'main/media/d_major_full_letters.png' %}",
+        'D♯/E♭ Major'  : "{% static 'main/media/eb_major_full_letters.png' %}",
+        'E Major'       : "{% static 'main/media/e_major_full_letters.png' %}",
+        'F Major'       : "{% static 'main/media/f_major_full.png' %}",
+        'F♯/G♭ Major'  : "{% static 'main/media/fsharp_major_full_letters.png' %}",
+        'G Major'       : "{% static 'main/media/g_major_full.png' %}",
+        'G♯/A♭ Major'  : "{% static 'main/media/gsharp_major_full_letters.png' %}",
+        'A Major'       : "{% static 'main/media/a_major_full.png' %}",
+        'A♯/B♭ Major'  : "{% static 'main/media/asharp_major_full_letters.png' %}",
+        'B Major'       : "{% static 'main/media/b_major_full.png' %}",
+
+        'C minor'       : "{% static 'main/media/c_minor_letters.png' %}",
+        'C♯/D♭ minor'  : "{% static 'main/media/csharp_minor_letters.png' %}",
+        'D minor'       : "{% static 'main/media/d_minor_full.png' %}",
+        'D♯/E♭ minor'  : "{% static 'main/media/dsharp_minor_letters.png' %}",
+        'E minor'       : "{% static 'main/media/e_minor_letters.png' %}",
+        'F minor'       : "{% static 'main/media/f_minor_letters.png' %}",
+        'F♯/G♭ minor'  : "{% static 'main/media/fsharp_minor_letters.png' %}",
+        'G minor'       : "{% static 'main/media/g_minor_letters.png' %}",
+        'G♯/A♭ minor'  : "{% static 'main/media/gsharp_minor_letters.png' %}",
+        'A minor'       : "{% static 'main/media/a_minor_full.png' %}",
+        'A♯/B♭ minor'  : "{% static 'main/media/asharp_minor_letters.png' %}",
+        'B minor'       : "{% static 'main/media/b_minor_letters.png' %}"
+    }
 
     function spotifyNextSong() {
         fetch('http://127.0.0.1:8000/ajax_next_song/')
@@ -63,7 +97,7 @@
                 return response.json();
             })
             .then(function (data) {
-
+                playingOrNot2();
             })
             .catch(function (data) {
                 console.log('spotifyNextSong ERROR', data);
@@ -96,30 +130,70 @@
     };
     isSomethingPlayingOrNot();
 
+
     function playingOrNot2 () {
         return  fetch('http://127.0.0.1:8000/ajax_spotify_track_info')
             .then(function (response) {
                 return response.json();
             })
             .then(function (data) {
-                // console.log(`data: ${data}`)
                 var curTrack = data['track'];
-                var prevTrack = mainSongTitle.innerHTML.toString();
-                if (curTrack !== prevTrack) {
-                    // testSongTitle.innerHTML = curTrack;
+                var prevTrack = mainSongTitle.innerHTML;
+                prevTrack = prevTrack.replace('&amp;', '&');
+                if (curTrack != prevTrack) {
                     mainSongTitle.innerHTML = curTrack;
-                    artistName.innerHTML = data['artist'];
-                    keySignature.innerHTML = data['key'];
-                    keyConfidence.innerHTML = data['key_confidence'];
-                    musicMode.innerHTML = data['mode'];
+                    if (artistName) {
+                        artistName.innerHTML = data['artist'];
+                    } else {
+                        artistName = document.createElement('h6');
+                        artistName.setAttribute('id', 'artist-name')
+                        artistName.innerHTML = data['artist'];
+                    }
+                    if (keySignature) {
+                        keySignature.innerHTML = data['key'];
+                    } else {
+                        keySignature = document.createElement('h4');
+                        keySignature.setAttribute('id', 'key-signature');
+                        keySignature.innerHTML = data['key'];
+                    }
+                    if (keyConfidence) {
+                        keyConfidence.innerHTML = data['key_confidence'];
+                    } else {
+                        keyConfidence = document.createElement('h6');
+                        keyConfidence.setAttribute('id', 'key-confidence');
+                        keyConfidence.innerHTML = data['key_confidence'];
+                    }
+                    if (musicMode) {
+                        musicMode.innerHTML = data['mode'];
+                    } else {
+                        musicMode = document.createElement('h4');
+                        musicMode.setAttribute('id', 'music-mode');
+                        musicMode.innerHTML = data['mode'];
+                    }
+
                     albumArt.setAttribute('src', data['album_art']);
 
-                    tuneBat.setAttribute('href', `https://tunebat.com/Search?q=${data['first_artist']}+${curTrack}`);
-                    noteDiscover.setAttribute('href', `https://www.notediscover.com/search?q=${data['first_artist']}+${curTrack}`);
-                    chordify.setAttribute('href', `https://chordify.net/search/${data['first_artist']}+${curTrack}`);
-                    ultimateGuitar.setAttribute('href', `https://www.ultimate-guitar.com/search.php?search_type=title&value=${data['first_artist']}+${curTrack}`);
+                    if (guitarScaleImg) {
+                        guitarScaleImg.setAttribute('src', keyImageMap[data['key'] + ' ' + data['mode']]);
+                    } else {
+                        guitarScaleImg = document.createElement('img');
+                        guitarScaleImg.setAttribute('src', keyImageMap[data['key'] + ' ' + data['mode']]);
+                        guitarScaleDiv.appendChild(guitarScaleImg);
+                    }
 
-                    console.log('track has changed into:', curTrack, 'by ', data['artist'], data['key'], data['key_confidence'])
+                    tuneBat.setAttribute('href', `https://tunebat.com/Search?q=${data['first_artist']}+${data['track_name_for_searching']}`);
+                    noteDiscover.setAttribute('href', `https://www.notediscover.com/search?q=${data['first_artist']}+${data['track_name_for_searching']}`);
+                    chordify.setAttribute('href', `https://chordify.net/search/${data['first_artist']}+${data['track_name_for_searching']}`);
+                    ultimateGuitar.setAttribute('href', `https://www.ultimate-guitar.com/search.php?search_type=title&value=
+                                                        ${data['first_artist']}+${data['track_name_for_searching']}`);
+
+                    console.log(`track has changed from ${prevTrack} into ${curTrack}`, 'by ', data['artist'], data['key'], data['key_confidence']);
+
+                    if (data['is_playing'] && data['is_playing'] !== null) {
+                        playButton.innerHTML = 'Pause';
+                    } else if (data['is_playing'] === true) {
+                        playButton.innerHTML = 'Play';
+                    }
                 }
             })
             .catch(function (data) {
