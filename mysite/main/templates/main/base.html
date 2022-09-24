@@ -106,23 +106,62 @@
           rel="stylesheet"
           integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
           crossorigin="anonymous">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 
 </head>
 <body>
     <div id="container">
-        <header style="text-align: center" class="header">
-            {% block header %}
-            <b>世界の終わりの風景</b>
-            {% endblock %}
-        </header>
+<!--        <header style="text-align: center" class="header">-->
+<!--            {% block header %}-->
+<!--            <b>世界の終わりの風景</b>-->
+<!--            {% endblock %}-->
+<!--        </header>-->
 
 
-        <div class="sidenav">
-            <a href="/home">Home</a>
-            <a href="/spotify">Spotify Currently Playing</a>
-            <a href="/spotify_login">Spotify Login</a>
-            <a href="/spotify_logout">Spotify Logout</a>
+        <div class="sidebar">
+            <div class="logo_content">
+                <div class="logo">
+                    <i class='bx bx-landscape'></i>
+                    <div class="logo_name">世界の終わりの風景</div>
+                </div>
+                <i class='bx bx-menu'></i>
+            </div>
+            <ul class="nav_list">
+                <li>
+                    <a href="/home">
+                        <i class='bx bx-home-alt-2'></i>
+                        <span class="links_name">Home</span>
+                    </a>
+<!--                    <span class="tooltip">Currently Playing</span>-->
+                </li>
+                <li>
+                    <a href="/spotify">
+                        <i class='bx bxl-spotify' ></i>
+                        <span class="links_name">Currently Playing</span>
+                    </a>
+<!--                    <span class="tooltip">Currently Playing</span>-->
+                </li>
+                <li>
+                    <a href="/spotify_login">
+                        <i class='bx bx-log-in' ></i>
+                        <span class="links_name">Spotify Login</span>
+                    </a>
+<!--                    <span class="tooltip">Currently Playing</span>-->
+                </li>
+            </ul>
+            <div class="profile_content">
+                    <a href="/spotify_logout">
+                        <i class='bx bx-log-out' ></i>
+                        <span class="links_name">Spotify Logout</span>
+                    </a>
+<!--                    <span class="tooltip">Currently Playing</span>-->
+            </div>
         </div>
+<!--            <a href="/home">Home</a>-->
+<!--            <a href="/spotify">Spotify Currently Playing</a>-->
+<!--            <a href="/spotify_login">Spotify Login</a>-->
+<!--            <a href="/spotify_logout">Spotify Logout</a>-->
 
         <div id="content" name="content" class="main_content">
         {% block content %}
