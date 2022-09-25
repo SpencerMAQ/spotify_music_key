@@ -31,9 +31,9 @@
             <div class="logo_content">
                 <div class="logo">
                     <i class='bx bx-landscape'></i>
-                    <div class="logo_name">世界の終わりの風景</div>
+                    <div class="logo_name">阿鼻叫喚</div>
                 </div>
-                <i class='bx bx-menu'></i>
+                <i class='bx bx-menu' id="burger"></i>
             </div>
             <ul class="nav_list">
                 <li>
@@ -41,29 +41,32 @@
                         <i class='bx bx-home-alt-2'></i>
                         <span class="links_name">Home</span>
                     </a>
-<!--                    <span class="tooltip">Currently Playing</span>-->
+                    <span class="tooltip">Home</span>
                 </li>
                 <li>
                     <a href="/spotify">
                         <i class='bx bxl-spotify' ></i>
-                        <span class="links_name">Currently Playing</span>
+                        <span class="links_name">Playing</span>
                     </a>
-<!--                    <span class="tooltip">Currently Playing</span>-->
+                    <span class="tooltip">Playing</span>
                 </li>
                 <li>
                     <a href="/spotify_login">
                         <i class='bx bx-log-in' ></i>
-                        <span class="links_name">Spotify Login</span>
+                        <span class="links_name">Login</span>
                     </a>
-<!--                    <span class="tooltip">Currently Playing</span>-->
+                    <span class="tooltip">Login</span>
                 </li>
             </ul>
+
             <div class="profile_content">
+                <div class="profile">
                     <a href="/spotify_logout">
-                        <i class='bx bx-log-out' ></i>
-                        <span class="links_name">Spotify Logout</span>
+                        <i class='bx bx-log-out' id="logout-button"></i>
+                        <span class="links_name">Logout</span>
                     </a>
-<!--                    <span class="tooltip">Currently Playing</span>-->
+                </div>
+                <span class="tooltip">Logout</span>
             </div>
         </div>
 <!--            <a href="/home">Home</a>-->
@@ -88,6 +91,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
             integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
             crossorigin="anonymous"></script>
+
+    <script>
+        let burger = document.querySelector("#burger")
+        let sideBar = document.querySelector(".sidebar")
+
+        burger.onclick = () => {
+            sideBar.classList.toggle('active')
+        }
+    </script>
 
 </body>
 </html>

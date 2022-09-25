@@ -1,59 +1,224 @@
-@font-face {
-    font-family: "Noto Sans JP Regular";
-
-    src:
-        local("Noto Sans JP"),
-        url("_NotoSansJP-Regular.otf");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins" , sans-serif;
 }
 
 :root {
     --mainBackground: rgb(50, 50, 50);
     --highlightColor: rgb(249, 85, 151);
     --fontBlack: rgb(20, 20 ,20);
+    --iconHeight: 70px;
 }
 
-#container {
-    font-family: "Noto Sans JP";
+body {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    /*overflow: hidden;*/
 }
 
-/*.sidenav {*/
-/*    height: 100%;*/
-/*    width: 160px;*/
-/*    position: fixed;*/
-/*    z-index: 1;*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*    background-color: #111;*/
-/*    !* prevents horizontal scrolling *!*/
-/*    overflow-x: hidden;*/
-/*    padding-top: 20px;*/
-/*    font-family: "Noto Sans JP";*/
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 78px;
+    background: #11101d;
+    padding: 6px 14px ;
+    transition: all 0.5s ease;
+}
+
+.sidebar.active {
+    width: 240px;
+}
+
+.sidebar .logo_content .logo {
+    color: #fff;
+    display: flex;
+    height: var(--iconHeight);
+    width: 100%;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s ease;
+}
+
+.sidebar.active .logo_content .logo {
+    opacity: 1;
+    pointer-events: none;
+}
+
+.logo_content .logo i {
+    font-size: 28px;
+    margin-right: 5px;
+}
+
+.logo_content .logo .logo_name {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.sidebar #burger {
+    position: absolute;
+    color: #fff;
+    left: 50%;
+    top: 6px;
+    font-size: 20px;
+    height: var(--iconHeight);
+    width: var(--iconHeight);
+    text-align: center;
+    line-height: 50px;
+    transform: translateX(-50%);
+}
+
+.sidebar.active #burger {
+    left: 90%;
+}
+
+
+.sidebar ul {
+    position: relative;
+    left: -45px;
+    margin: 0;
+    margin-top: 20px;
+}
+
+.sidebar ul li {
+    position: relative;
+    height: var(--iconHeight);
+    width: 100%;
+    margin: 0 5px;
+    list-style: none;
+    line-height: var(--iconHeight);
+}
+
+.sidebar ul li a {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-radius: 12px;
+    white-space: nowrap;
+}
+
+.sidebar ul li a:hover {
+    color: #11101d;
+    background: #fff;
+}
+
+.sidebar ul li i {
+    height: var(--iconHeight);
+    min-width: var(--iconHeight);
+    border-radius: 12px;
+    line-height: var(--iconHeight);
+    text-align: center;
+}
+
+.sidebar ul li i:hover {
+    color: #11101d;
+    background: #fff;
+    border-radius: 12px;
+}
+
+.sidebar .links_name {
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s ease;
+}
+
+.sidebar.active .links_name {
+    opacity: 1;
+    pointer-events: none;
+}
+
+/* Start - Tooltip mouseover */
+.sidebar ul li .tooltip {
+    position: absolute;
+    left: 122px;
+    top: 0;
+    transform: translateY(-50%, -50%);
+    border-radius: 6px;
+    height: 35px;
+    width: 122px;
+    background: #fff;
+    line-height: 35px;
+    text-align: center;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    transition: 0s;
+    opacity: 0;
+    pointer-events: none;
+    display: block;
+}
+
+.sidebar.active ul li .tooltip {
+    display: none;
+}
+
+.sidebar ul li:hover .tooltip {
+    transition: all 0.5s ease;
+    opacity: 1;
+    top: 50%;
+}
+
+/* End - Tooltip mouseover */
+
+.sidebar .profile_content {
+    position: absolute;
+    color: #fff;
+    bottom: 0;
+    left: 0;
+}
+
+.sidebar .profile_content .profile {
+    position: relative;
+    padding: 10px;
+    height: 60px;
+}
+
+.profile #logout-button {
+    height: 65px;
+    width: 65px;
+    object-fit: cover;
+    color: #fff;
+    border-radius: 12px;
+}
+
+.profile_content a{
+    text-decoration: none;
+    color: #fff;
+}
+/*@font-face {*/
+/*    font-family: "Noto Sans JP Regular";*/
+
+/*    src:*/
+/*        local("Noto Sans JP"),*/
+/*        url("_NotoSansJP-Regular.otf");*/
 /*}*/
 
-/*.sidenav a {*/
-/*    padding: 6px 8px 6px 16px;*/
-/*    text-decoration: none;*/
-/*    font-size: 25px;*/
-/*    color: #818181;*/
-/*    display: block;*/
+
+/*#container {*/
+/*    font-family: "Poppins";*/
 /*}*/
 
-/*.sidenav a:hover {*/
-/*    color: #f1f1f1;*/
-/*}*/
 
 .main_content {
-    margin-left: 160px;
-    padding: 0px 10px;
+    position: absolute;
+    height: 100%;
+    width: calc(100% - 240px);
+    left: 78px;
+    margin: 12px;
+    transition: all 0.5 ease;
 }
 
-/*.header {*/
-/*    font-family: "Noto Sans JP";*/
-/*    font-size: 40px;*/
-/*    background-color: #111;*/
-/*    color: #818181;*/
-/*    padding: 15px 15px 15px 15px;*/
-/*}*/
+.sidebar.active ~ .main_content {
+    width: calc(100% - 240px);
+    left: 240px;
+}
+
 
 .fifths {
     position: absolute;
