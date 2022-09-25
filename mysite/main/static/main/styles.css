@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+/* Google Font Import - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
 @font-face {
     font-family: "Noto Sans JP Regular";
@@ -8,224 +11,268 @@
         url("_NotoSansJP-Regular.otf");
 }
 
+
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins" , "Noto Sans JP", "Noto Sans JP Regular", sans-serif;
+    font-family: "Inter", "Poppins" , "Noto Sans JP", "Noto Sans JP Regular", sans-serif;
 }
 
-:root {
-    /*--mainBackground: rgb(50, 50, 50);*/
-    --highlightColor: rgb(249, 85, 151);
-    --fontBlack: rgb(20, 20 ,20);
-    --iconHeight: 25px;
+:root{
+    /* ===== Colors ===== */
+    /*--body-color: #E4E9F7;*/
+    /*--sidebar-color: #FFF;*/
+    /*--primary-color: rgb(249, 85, 151);*/
+    /*--primary-color-light: #F6F5FF;*/
+    /*--toggle-color: #DDD;*/
+    /*--text-color: #707070;*/
+    --body-color: #18191a;
+    --sidebar-color: #242526;
+    --primary-color: rgb(209, 85, 151);
+    --primary-color-light: #3a3b3c;
+    --toggle-color: #fff;
+    --text-color: #ccc;
 
-    /* ---- Colors ---- */
-    --body-color: #e4e9f7;
-    --sidebar-color: #fff;
-    --primary-color: rgb(249, 85, 151);
-    --primary-color-light: #f6f5ff;
-    --toggle-color: #ddd;
-    --text-color: #707070;
-
-    /* ---- Transition ---- */
-    --tran-02: all 0.2s ease;
+    /* ====== Transition ====== */
+    --tran-03: all 0.2s ease;
     --tran-03: all 0.3s ease;
-    --tran-04: all 0.4s ease;
-    --tran-05: all 0.5s ease;
+    --tran-04: all 0.3s ease;
+    --tran-05: all 0.3s ease;
 }
 
-header .app-name {
-    font-size: 1.35em;
+body{
+    min-height: 100vh;
+    background-color: var(--body-color);
+    transition: var(--tran-05);
+    font-family: "Lato", "Inter", "Noto Sans JP", "Noto Sans JP Regular", sans-serif;
 }
 
-header .app-subtitle {
-    font-size: 0.7em;
+::selection{
+    background-color: var(--primary-color);
+    color: #fff;
 }
 
-
-/* --- Reusable CSS --- */
-
-.sidebar .text {
-    /* Title and Subtitle (i.e. the div container, not the individual spans)*/
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text-color);
+body.dark{
+    --body-color: #18191a;
+    --sidebar-color: #242526;
+    --primary-color: rgb(209, 85, 151);
+    --primary-color-light: #3a3b3c;
+    --toggle-color: #fff;
+    --text-color: #ccc;
 }
 
-.sidebar .logo-text-header .logo-image i {
-    /* Current Sidebar Logo (currently BURGER) */
-    /*min-width: 60px;*/
-    font-size: 50px;
-    display: flex;
-    align-items: center;
-    min-width: 60px;
-}
-
-/* --- Sidebar --- */
-
-.sidebar {
+/* ===== Sidebar ===== */
+ .sidebar{
     position: fixed;
     top: 0;
     left: 0;
     height: 100%;
     width: 250px;
-    /* top and bottom, then left and right */
     padding: 10px 14px;
     background: var(--sidebar-color);
+    transition: var(--tran-05);
+    z-index: 100;
+}
+.sidebar.close{
+    width: 88px;
 }
 
-.sidebar.close {
-    width: 78px;
-}
-
-.sidebar header {
-    position: relative;
-}
-
-.sidebar header .logo-text-header {
-    display: flex;
-    /*flex-direction: column;*/
-}
-
-.sidebar.close .title-subtitle {
-    opacity: 0;
-}
-
-.sidebar .app-name, .app-subtitle {
-    /* Title and Subtitle */
-    display: inline-block;
-}
-
-.sidebar .app-name {
-    font-weight: 600;
-}
-
-.sidebar .app-subtitle {
-    margin-top: -2px;
-    display: flex;
-}
-
-header #burger {
-    /*position: relative;*/
-    /*top: 35%;*/
-    /*right: 250px;*/
-    /*transform: translateY(-50%);*/
-    /*font-size: 60px;*/
-    /*text-align: center;*/
-    /*display: flex;*/
-    /*align-items: center;*/
-    /*justify-content: center;*/
-    /*display: inline-block;*/
-}
-
-/* --- Sidebar Menu --- */
-.sidebar li {
+/* ===== Reusable code - Here ===== */
+.sidebar li{
     height: 50px;
-    margin-top: 10px;
     list-style: none;
     display: flex;
     align-items: center;
-    /*background: red;*/
-    position: relative;
-    left: -40px;
+    margin-top: 10px;
 }
 
-.sidebar li .icon {
+.sidebar header .image,
+.sidebar .icon{
+    min-width: 60px;
+    border-radius: 6px;
+}
+
+.sidebar .icon{
+    min-width: 60px;
+    border-radius: 6px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 60px;
-    font-size: var(--iconHeight);
+    font-size: 20px;
 }
 
-.sidebar li .icon,
-.sidebar li .nav-text, #burger {
+.sidebar .text,
+.sidebar .icon{
     color: var(--text-color);
-    transition: var(--tran-02);
+    transition: var(--tran-03);
 }
 
-.sidebar.close .text {
+.sidebar .text{
+    font-size: 17px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 1;
+}
+.sidebar.close .text{
     opacity: 0;
 }
+/* =========================== */
 
-.sidebar li a {
-    height: 100%;
-    width: 100%;
+.sidebar header{
+    position: relative;
+}
+
+.sidebar header .image-text{
     display: flex;
     align-items: center;
-    text-decoration: none;
-    border-radius: 6px;
-    transition: var(--tran-02);
 }
-
-.sidebar li a:hover {
-    background: var(--primary-color);
-}
-
-.sidebar li a:hover .icon,
-.sidebar li a:hover .text {
-    /*  change icon, text color upon hover  */
-    color: var(--sidebar-color);
-}
-
-.sidebar .nav_list {
-    /*background: red;*/
-    height: calc(100% - 200px);
+.sidebar header .logo-text{
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+}
+header .image-text .name {
+    margin-top: 2px;
+    font-size: 1.4em;
+    font-weight: 600;
 }
 
-
-
-/* --- Footer/Logout --- */
-.sidebar .bottom-content {
-    position: relative;
-    left: 32px;
+header .image-text .profession{
+    font-size: 0.7em;
+    margin-top: -2px;
+    display: block;
 }
 
-.bottom-content .mode {
-    background: var(--primary-color-light);
-}
-
-.bottom-content .mode .moon-sun {
-    height: 50px;
-    width: 60px;
-    display: flex;
-    align-items: center;
-}
-
-.bottom-content .mode i {
-    position: absolute;
-    left: 0px;
-}
-
-/* --- Dark mode switch --- */
-.bottom-content .mode i.sun {
-    opacity: 0;
-}
-
-.bottom-content .mode .toggle-switch {
+.sidebar header .image{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.sidebar header .image img{
+    width: 40px;
+    border-radius: 6px;
+}
+
+.sidebar header .toggle{
+    position: absolute;
+    top: 50%;
+    right: -25px;
+    transform: translateY(-50%) rotate(180deg);
+    height: 25px;
+    width: 25px;
+    background-color: var(--primary-color);
+    color: var(--sidebar-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+    transition: var(--tran-05);
+}
+
+body.dark .sidebar header .toggle{
+    color: var(--text-color);
+}
+
+.sidebar.close .toggle{
+    transform: translateY(-50%) rotate(0deg);
+}
+
+.sidebar .menu{
+    margin-top: 40px;
+    /*background: red;*/
+}
+
+.sidebar li a{
+    list-style: none;
+    height: 100%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: var(--tran-03);
+}
+
+.sidebar li a:hover{
+    background-color: var(--primary-color);
+}
+.sidebar li a:hover .icon,
+.sidebar li a:hover .text{
+    color: var(--sidebar-color);
+}
+body.dark .sidebar li a:hover .icon,
+body.dark .sidebar li a:hover .text{
+    color: var(--text-color);
+}
+
+.sidebar ul {
+    position: relative;
+    left: -35px;
+}
+
+.sidebar .menu-bar{
+    height: calc(100% - 55px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: scroll;
+    /*background: red;*/
+}
+.menu-bar::-webkit-scrollbar{
+    display: none;
+}
+.sidebar .menu-bar .mode{
+    border-radius: 6px;
+    background-color: var(--primary-color-light);
+    position: relative;
+    transition: var(--tran-05);
+}
+
+.menu-bar .mode .sun-moon{
+    height: 50px;
+    width: 60px;
+}
+
+.mode .sun-moon i{
+    position: absolute;
+}
+.mode .sun-moon i.sun{
+    opacity: 0;
+}
+body.dark .mode .sun-moon i.sun{
+    opacity: 1;
+}
+body.dark .mode .sun-moon i.moon{
+    opacity: 0;
+}
+
+.menu-bar .bottom-content .toggle-switch{
+    position: absolute;
+    right: 0;
     height: 100%;
     min-width: 60px;
-    /*background: red;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
     cursor: pointer;
 }
-
-.toggle-switch .switch {
+.toggle-switch .switch{
     position: relative;
     height: 22px;
-    width: 44px;
+    width: 40px;
     border-radius: 25px;
-    background: var(--toggle-color);
+    background-color: var(--toggle-color);
+    transition: var(--tran-05);
 }
 
-.switch::before {
+.switch::before{
     content: '';
     position: absolute;
     height: 15px;
@@ -234,55 +281,44 @@ header #burger {
     top: 50%;
     left: 5px;
     transform: translateY(-50%);
-    background: var(--sidebar-color);
-    transition: var(--tran-03);
+    background-color: var(--sidebar-color);
+    transition: var(--tran-04);
 }
 
-body.dark .switch::before {
-    left: 24px;
+body.dark .switch::before{
+    left: 20px;
 }
 
-
-
-
-/**
- *
- *
- *
- *
- *
- *
- *
- * Main Content (i.e. body)
- */
-
-.main_content {
+.main_content{
+    position: absolute;
+    top: 0;
+    top: 0;
+    left: 270px;
     height: 100vh;
-    background: var(--body-color);
+    width: calc(100% - 250px);
+    /*background-color: var(--body-color);*/
+    transition: var(--tran-05);
+}
+/*.home .text{*/
+/*    font-size: 30px;*/
+/*    font-weight: 500;*/
+/*    color: var(--text-color);*/
+/*    padding: 12px 60px;*/
+/*}*/
+
+.sidebar.close ~ .main_content{
+    left: 98px;
+    height: 100vh;
+    width: calc(100% - 98px);
+}
+body.dark .home .text{
+    color: var(--text-color);
 }
 
-body {
-    transition: var(--tran-02);
-}
-
-body.dark {
-    --body-color: #18191A;
-    --sidebar-color: #242526;
-    --primary-color: #3A3B3C;
-    --primary-color-light: #3A3B3C;
-    --toggle-color: #FFF;
-    --text-color: #CCC;
-}
 
 
 
-/**
- *
- *
- *
- *
- * Circle of Fifths
- */
+
 
 .fifths {
     position: absolute;

@@ -9,7 +9,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'main/styles.css' %}">
 
-    <title>{% block title %}世界の終わりの風景{% endblock %}</title>
+    <title>{% block title %}阿鼻叫喚{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
@@ -18,73 +18,80 @@
 
 
 </head>
-
 <body>
-
-    <div class="sidebar">
-<!--                <i class='bx bx-landscape'></i>-->
-<!--                <div class="logo_name">阿鼻叫喚</div>-->
-<!--            <i class='bx bx-menu' id="burger"></i>-->
+<nav class="sidebar close">
         <header>
-            <div class="logo-text-header">
-                <span class="logo-image"><i class='bx bx-menu icon' id="burger"></i></span>
-                <div class="text header-text">
-                    <span class="app-name title-subtitle">阿鼻叫喚</span>
-                    <span class="app-subtitle title-subtitle">この門をくぐる者は、一切の希望を捨てよ。</span>
+            <div class="image-text">
+                <span class="image">
+                    <i class='bx bx-menu icon' id="burger"></i>
+                </span>
+
+                <div class="text logo-text">
+                    <span class="name">阿鼻叫喚</span>
+                    <span class="profession">この門をくぐる者は。。</span>
                 </div>
             </div>
 
-<!--            <i class='bx bx-menu' id="burger"></i>-->
+            <i class='bx bx-chevron-right toggle'></i>
         </header>
 
+        <div class="menu-bar">
+            <div class="menu">
 
-        <ul class="nav_list">
-            <li>
-                <a href="/home">
-                    <i class='bx bx-home-alt-2 icon'></i>
-                    <span class="text nav-text">Home</span>
-                </a>
-                <span class="tooltip">Home</span>
-            </li>
-            <li>
-                <a href="/spotify">
-                    <i class='bx bxl-spotify icon' ></i>
-                    <span class="text nav-text">Playing</span>
-                </a>
-                <span class="tooltip">Playing</span>
-            </li>
-            <li>
-                <a href="/spotify_login">
-                    <i class='bx bx-log-in icon' ></i>
-                    <span class="text nav-text">Login</span>
-                </a>
-                <span class="tooltip">Login</span>
-            </li>
-        </ul>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="/home">
+                            <i class='bx bx-home-alt icon' ></i>
+                            <span class="text nav-text">Home</span>
+                        </a>
+                    </li>
 
-        <div class="bottom-content">
-            <li class="profile">
-                <a href="/spotify_logout">
-                    <i class='bx bx-log-out icon' id="logout-button"></i>
-                    <span class="logout-text nav-text">Logout</span>
-                </a>
-            </li>
-<!--            <span class="tooltip">Logout</span>-->
-            <li class="mode">
-                <div class="moon-sun">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='bx bx-moon icon moon'></i>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='bx bx-sun icon sun' ></i>
-                </div>
-                <span class="mode-text text">Dark Mode</span>
+                    <li class="nav-link">
+                        <a href="/spotify">
+                            <i class='bx bxl-spotify icon' ></i>
+                            <span class="text nav-text">Playing</span>
+                        </a>
+                    </li>
 
-                <div class="toggle-switch">
-                    <span class="switch"></span>
-                </div>
 
-            </li>
+                    <li class="nav-link">
+                        <a href="/spotify_login">
+                             <i class='bx bx-log-in icon' ></i>
+                            <span class="text nav-text">Login</span>
+                        </a>
+                    </li>
 
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="">
+                    <a href="/spotify_logout">
+                        <i class='bx bx-log-out icon' ></i>
+                        <span class="text nav-text">Logout</span>
+                    </a>
+                </li>
+
+                <li class="mode">
+                    <div class="sun-moon">
+                        <i class='bx bx-moon icon moon'></i>
+                        <i class='bx bx-sun icon sun'></i>
+                    </div>
+                    <span class="mode-text text">Dark mode</span>
+
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
+                    </div>
+                </li>
+
+            </div>
         </div>
-    </div>
+
+    </nav>
+
+<!--    <section class="home">-->
+<!--        <div class="text">Dashboard Sidebar</div>-->
+<!--    </section>-->
 
     <div id="content" name="content" class="main_content">
     {% block content %}
@@ -107,29 +114,29 @@
         crossorigin="anonymous"></script>
 
 <script>
-const body = document.querySelector('body')
-const sidebar = document.querySelector('.sidebar')
-const burger = document.querySelector('#burger')
-const modeSwitch = document.querySelector('.toggle-switch')
-const modeText = document.querySelector('.mode-text')
+const body = document.querySelector('body'),
+sidebar = body.querySelector('nav'),
+toggle = body.querySelector(".toggle"),
+modeSwitch = body.querySelector(".toggle-switch"),
+modeText = body.querySelector(".mode-text");
 
-burger.addEventListener('click', () => {
-    sidebar.classList.toggle('close')
+
+toggle.addEventListener("click" , () =>{
+    sidebar.classList.toggle("close");
 })
 
-modeSwitch.addEventListener('click', () => {
-    body.classList.toggle('dark')
-})
+modeSwitch.addEventListener("click" , () =>{
+    body.classList.toggle("dark");
 
+    if(body.classList.contains("dark")){
+        modeText.innerText = "Light mode";
+    }else{
+        modeText.innerText = "Dark mode";
 
+    }
+});
+    </script>
 
-// let burger = document.querySelector("#burger")
-// let sideBar = document.querySelector(".sidebar")
-//
-// burger.onclick = () => {
-//     sideBar.classList.toggle('active')
-// }
-</script>
 
 </body>
 </html>
