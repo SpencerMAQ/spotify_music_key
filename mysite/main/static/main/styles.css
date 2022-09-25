@@ -19,7 +19,7 @@
     /*--mainBackground: rgb(50, 50, 50);*/
     --highlightColor: rgb(249, 85, 151);
     --fontBlack: rgb(20, 20 ,20);
-    --iconHeight: 70px;
+    --iconHeight: 25px;
 
     /* ---- Colors ---- */
     --body-color: #e4e9f7;
@@ -46,11 +46,12 @@
 }
 
 .sidebar .logo-text-header .logo-image i {
-    /* Current Sidebar Logo (currently mountain) */
+    /* Current Sidebar Logo (currently BURGER) */
     /*min-width: 60px;*/
     font-size: 50px;
     display: flex;
     align-items: center;
+    min-width: 60px;
 }
 
 /* --- Sidebar --- */
@@ -86,14 +87,66 @@
 
 .sidebar .app-subtitle {
     margin-top: -2px;
+    display: flex;
 }
 
-.sidebar .header #burger {
-    position: absolute;
-    top: 50%;
-    right: -25px;
-    transform: translateY(-50%);
-    height: var(--iconHeight);
+header #burger {
+    /*position: relative;*/
+    /*top: 35%;*/
+    /*right: 250px;*/
+    /*transform: translateY(-50%);*/
+    /*font-size: 60px;*/
+    /*text-align: center;*/
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    /*display: inline-block;*/
+}
+
+/* --- Sidebar Menu --- */
+.nav_list li {
+    height: 50px;
+    margin-top: 10px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    /*background: red;*/
+    position: relative;
+    left: -40px;
+}
+
+.nav_list li .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    font-size: var(--iconHeight);
+}
+
+.nav_list li .icon,
+.nav_list li .nav-text {
+    color: var(--text-color);
+    transition: var(--tran-02);
+}
+
+.nav_list li a {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--tran-02);
+}
+
+.nav_list li a:hover {
+    background: var(--primary-color);
+}
+
+.nav_list li a:hover .icon,
+.nav_list li a:hover .text {
+    /*  change icon, text color upon hover  */
+    color: var(--sidebar-color);
 }
 
 /* --- Main Content (i.e. body) --- */
