@@ -27,10 +27,10 @@
 <!--            <i class='bx bx-menu' id="burger"></i>-->
         <header>
             <div class="logo-text-header">
-                <span class="logo-image"><i class='bx bx-menu' id="burger"></i></span>
+                <span class="logo-image"><i class='bx bx-menu icon' id="burger"></i></span>
                 <div class="text header-text">
-                    <span class="app-name">阿鼻叫喚</span>
-                    <span class="app-subtitle">この門をくぐる者は、一切の希望を捨てよ。</span>
+                    <span class="app-name title-subtitle">阿鼻叫喚</span>
+                    <span class="app-subtitle title-subtitle">この門をくぐる者は、一切の希望を捨てよ。</span>
                 </div>
             </div>
 
@@ -62,14 +62,27 @@
             </li>
         </ul>
 
-        <div class="profile_content">
-            <div class="profile">
+        <div class="bottom-content">
+            <li class="profile">
                 <a href="/spotify_logout">
-                    <i class='bx bx-log-out' id="logout-button"></i>
-                    <span class="links_name">Logout</span>
+                    <i class='bx bx-log-out icon' id="logout-button"></i>
+                    <span class="logout-text nav-text">Logout</span>
                 </a>
-            </div>
-            <span class="tooltip">Logout</span>
+            </li>
+<!--            <span class="tooltip">Logout</span>-->
+            <li class="mode">
+                <div class="moon-sun">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='bx bx-moon icon moon'></i>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='bx bx-sun icon sun' ></i>
+                </div>
+                <span class="mode-text text">Dark Mode</span>
+
+                <div class="toggle-switch">
+                    <span class="switch"></span>
+                </div>
+
+            </li>
+
         </div>
     </div>
 
@@ -94,12 +107,28 @@
         crossorigin="anonymous"></script>
 
 <script>
-    // let burger = document.querySelector("#burger")
-    // let sideBar = document.querySelector(".sidebar")
-    //
-    // burger.onclick = () => {
-    //     sideBar.classList.toggle('active')
-    // }
+const body = document.querySelector('body')
+const sidebar = document.querySelector('.sidebar')
+const burger = document.querySelector('#burger')
+const modeSwitch = document.querySelector('.toggle-switch')
+const modeText = document.querySelector('.mode-text')
+
+burger.addEventListener('click', () => {
+    sidebar.classList.toggle('close')
+})
+
+modeSwitch.addEventListener('click', () => {
+    body.classList.toggle('dark')
+})
+
+
+
+// let burger = document.querySelector("#burger")
+// let sideBar = document.querySelector(".sidebar")
+//
+// burger.onclick = () => {
+//     sideBar.classList.toggle('active')
+// }
 </script>
 
 </body>
