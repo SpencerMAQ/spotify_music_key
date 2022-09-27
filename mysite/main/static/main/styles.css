@@ -337,7 +337,7 @@ body.dark .home .text{
 
 #play-button {
     color: white;
-    background-color: var(--highlightColor);
+    background-color: var(--sidebar-color);
     padding: 8px 8px 8px 8px;
     border-radius: 11px;
     border: none;
@@ -345,14 +345,15 @@ body.dark .home .text{
 
 #pause-loop, #resume-loop {
     color: white;
-    background-color: rgb(60, 60, 60);
+    background-color: var(--sidebar-color);
     padding: 8px 8px 8px 8px;
     border-radius: 11px;
     border: none;
 }
 
 #next-button {
-    background-color: var(--highlightColor);
+    background-color: var(--sidebar-color);
+    color: white;
     padding: 8px 8px 8px 8px;
     border-radius: 11px;
     border: none;
