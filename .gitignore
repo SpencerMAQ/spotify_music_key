@@ -145,3 +145,10 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/windows,pycharm
 /mysite/main/_secret_info.py
 /.cache
+.idea/*
+.idea/.gitignore
+.idea/misc.xml
+mysite/main/__pycache__/*
+mysite/main/migrations/__pycache__/*
+mysite/mysite/__pycache__/*
+mysite/.cache
