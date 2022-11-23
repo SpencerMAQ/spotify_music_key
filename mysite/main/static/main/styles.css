@@ -1,6 +1,7 @@
 /* Google Font Import - Poppins */
-@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 :root {
   font-size: 16px;
@@ -8,6 +9,12 @@
   --main-color: rgba(236, 44, 127, 0.862);
   --sidebar-bg: #242526;
   --icons-x-translate: translateX(1.75rem);
+  --btn-color: rgb(60, 60, 60);
+}
+
+::selection {
+  background-color: var(--main-color);
+  color: white;
 }
 
 * {
@@ -29,13 +36,12 @@ body::-webkit-slider-thumb {
 }
 
 .main {
-  /* margin-left: 5rem; */
   padding: 1rem;
-  /* height: 100vh; */
   width: 100%;
   position: absolute;
   left: 5rem;
   top: 0;
+  /* font-family: "Roboto Mono", "Roboto"; */
 }
 
 /* 
@@ -144,6 +150,86 @@ ACTIVE
 
 .navbar.active .header i {
   color: var(--main-color);
-  /* transform: rotate(-90deg);
-  transform-origin: 50% 50%; */
+}
+
+/* 
+
+
+
+
+spotify control buttons
+ */
+
+button {
+  font-size: 0.5rem;
+}
+
+#play-button {
+  color: white;
+  background-color: var(--btn-color);
+  padding: 8px 8px 8px 8px;
+  border-radius: 11px;
+  border: none;
+}
+
+#pause-loop,
+#resume-loop {
+  color: white;
+  background-color: var(--btn-color);
+  padding: 8px 8px 8px 8px;
+  border-radius: 11px;
+  border: none;
+}
+
+#next-button {
+  background-color: var(--btn-color);
+  color: white;
+  padding: 8px 8px 8px 8px;
+  border-radius: 11px;
+  border: none;
+  font-size: 15px;
+}
+
+/* external links */
+#tunebat,
+#notediscover,
+#chordify,
+#u-guitar {
+  text-decoration: none;
+  color: var(--main-color);
+}
+
+/*  */
+#track-title {
+  letter-spacing: 0.5px;
+  max-width: 800px;
+  word-wrap: normal;
+}
+
+/* Partition the main contents of /spotify into flexbox items */
+
+.spotify-cont {
+  display: flex;
+  /* justify-content: space-evenly; */
+}
+
+.main-info {
+  /* flex: 2; */
+  max-width: 800px;
+}
+
+#key-info-container {
+  /* flex: 4; */
+}
+
+.theory-info {
+  margin-left: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* album cover */
+img#al_art {
+  border-radius: 0.5rem;
 }

@@ -1,263 +1,301 @@
-{% extends 'main/base.html' %}
-
-{% block title %} Currently Playing {% endblock %}
-
+{% extends 'main/base.html' %} {% block title %} Currently Playing {% endblock%}
 {% block content %}
-    <br>
-    <img src="{{album_art}}" alt="home" class="album_art" id="al_art">
+<br />
+<div class="spotify-cont">
+  <div class="main-info">
+    <img src="{{album_art}}" alt="home" class="album_art" id="al_art" />
     <h2 id="track-title">{{track}}(Track)</h2>
     <h6 id="artist-name">{{artist}}(Artist)</h6>
     <div>
-        <button id="play-button"></button> &nbsp;&nbsp; <button id="next-button">»</button>
-        <br>
-        <button id="pause-loop" onclick="stop();">Pause Infinite Loop</button>
-        <button id="resume-loop" onclick="resumeLoop();">Resume Infinite Loop</button>
+      <button id="play-button"></button> &nbsp;&nbsp;
+      <button id="next-button">»</button>
+      <br />
+      <button id="pause-loop" onclick="stop();">Pause Infinite Loop</button>
+      <button id="resume-loop" onclick="resumeLoop();">
+        Resume Infinite Loop
+      </button>
     </div>
 
-    <br>
     <div id="key-info-container">
-        <details open class="definition-field">
-            <summary class="definition-title">Reveal/Hide Key</summary>
-            <h4 id="key-signature">{{key}}(Key)</h4> <h4 id="music-mode">{{mode}}(Mode)</h4>
-            <h6 id="key-confidence">{{key_confidence}} %</h6>
-        </details>
+      <details open class="definition-field">
+        <summary class="definition-title">Reveal/Hide Key</summary>
+        <h4 id="key-signature">{{key}}(Key)</h4>
+        <h4 id="music-mode">{{mode}}(Mode)</h4>
+        <h6 id="key-confidence">{{key_confidence}} %</h6>
+      </details>
     </div>
-    <br><br>
+    <br />
 
-    <a href="https://tunebat.com/Search?q={{first_artist}}+{{track_name_for_searching}}" id="tunebat">tunebat</a><br>
-    <a href="https://www.notediscover.com/search?q={{first_artist}}+{{track_name_for_searching}}" id="notediscover">notediscover</a><br>
-    <a href="https://chordify.net/search/{{first_artist}}+{{track_name_for_searching}}" id="chordify">chordify(requires login)</a><br>
-    <a href="https://www.ultimate-guitar.com/search.php?search_type=title&value={{first_artist}}+{{track_name_for_searching}}" id="u-guitar">ultimate guitar</a>
+    <a
+      href="https://tunebat.com/Search?q={{first_artist}}+{{track_name_for_searching}}"
+      id="tunebat"
+      >tunebat</a
+    ><br />
+    <a
+      href="https://www.notediscover.com/search?q={{first_artist}}+{{track_name_for_searching}}"
+      id="notediscover"
+      >notediscover</a
+    ><br />
+    <a
+      href="https://chordify.net/search/{{first_artist}}+{{track_name_for_searching}}"
+      id="chordify"
+      >chordify(requires login)</a
+    ><br />
+    <a
+      href="https://www.ultimate-guitar.com/search.php?search_type=title&value={{first_artist}}+{{track_name_for_searching}}"
+      id="u-guitar"
+      >ultimate guitar</a
+    >
+  </div>
 
-    {% load static %}
-    <img src="{% static "main/media/circle_5.jpg" %}" alt="home" class="fifths"/>
+  <div class="theory-info">
+    {% load static %} <img src="{% static "main/media/circle_5.jpg" %}"
+    alt="home" class="fifths"/>
 
     <details open id="guitar-scale-container">
-        <summary>Show/Hide Guitar Scale Chart</summary>
-        <img src="" id="guitar-scale-img">
+      <summary>Show/Hide Guitar Scale Chart</summary>
+      <img src="" id="guitar-scale-img" />
     </details>
-
-{% endblock %}
-
-{% block scripts %}
+  </div>
+</div>
+{% endblock %} {% block scripts %}
 <script>
-    // TODO: JS still fucks up when the track being played is local
+  // TODO: JS still fucks up when the track being played is local
 
-    var mainSongTitle = document.getElementById('track-title');
-    var artistName = document.getElementById('artist-name');
-    var albumArt = document.getElementById('al_art');
+  var mainSongTitle = document.getElementById("track-title");
+  var artistName = document.getElementById("artist-name");
+  var albumArt = document.getElementById("al_art");
 
-    var keySignature = document.getElementById('key-signature');
-    var keyConfidence = document.getElementById('key-confidence');
-    var musicMode = document.getElementById('music-mode');
+  var keySignature = document.getElementById("key-signature");
+  var keyConfidence = document.getElementById("key-confidence");
+  var musicMode = document.getElementById("music-mode");
 
-    var tuneBat = document.getElementById('tunebat');
-    var noteDiscover = document.getElementById('notediscover');
-    var chordify = document.getElementById('chordify');
-    var ultimateGuitar = document.getElementById('u-guitar');
+  var tuneBat = document.getElementById("tunebat");
+  var noteDiscover = document.getElementById("notediscover");
+  var chordify = document.getElementById("chordify");
+  var ultimateGuitar = document.getElementById("u-guitar");
 
-    var playButton = document.getElementById("play-button");
-    var nextButton = document.getElementById('next-button');
-    nextButton.addEventListener('click', spotifyNextSong);
+  var playButton = document.getElementById("play-button");
+  var nextButton = document.getElementById("next-button");
+  nextButton.addEventListener("click", spotifyNextSong);
 
-    var guitarScaleDiv = document.getElementById('guitar-scale-container');
-    var guitarScaleImg = document.getElementById('guitar-scale-img');
+  var guitarScaleDiv = document.getElementById("guitar-scale-container");
+  var guitarScaleImg = document.getElementById("guitar-scale-img");
 
-    const keyImageMap = {
-        'C Major'       : "{% static 'main/media/c_major_full_letters.png' %}",
-        'C♯/D♭ Major'  : "{% static 'main/media/db_major_full.png' %}",
-        'D Major'       : "{% static 'main/media/d_major_full_letters.png' %}",
-        'D♯/E♭ Major'  : "{% static 'main/media/eb_major_full_letters.png' %}",
-        'E Major'       : "{% static 'main/media/e_major_full_letters.png' %}",
-        'F Major'       : "{% static 'main/media/f_major_full.png' %}",
-        'F♯/G♭ Major'  : "{% static 'main/media/fsharp_major_full_letters.png' %}",
-        'G Major'       : "{% static 'main/media/g_major_full.png' %}",
-        'G♯/A♭ Major'  : "{% static 'main/media/gsharp_major_full_letters.png' %}",
-        'A Major'       : "{% static 'main/media/a_major_full.png' %}",
-        'A♯/B♭ Major'  : "{% static 'main/media/asharp_major_full_letters.png' %}",
-        'B Major'       : "{% static 'main/media/b_major_full.png' %}",
+  const keyImageMap = {
+    "C Major": "{% static 'main/media/c_major_full_letters.png' %}",
+    "C♯/D♭ Major": "{% static 'main/media/db_major_full.png' %}",
+    "D Major": "{% static 'main/media/d_major_full_letters.png' %}",
+    "D♯/E♭ Major": "{% static 'main/media/eb_major_full_letters.png' %}",
+    "E Major": "{% static 'main/media/e_major_full_letters.png' %}",
+    "F Major": "{% static 'main/media/f_major_full.png' %}",
+    "F♯/G♭ Major": "{% static 'main/media/fsharp_major_full_letters.png' %}",
+    "G Major": "{% static 'main/media/g_major_full.png' %}",
+    "G♯/A♭ Major": "{% static 'main/media/gsharp_major_full_letters.png' %}",
+    "A Major": "{% static 'main/media/a_major_full.png' %}",
+    "A♯/B♭ Major": "{% static 'main/media/asharp_major_full_letters.png' %}",
+    "B Major": "{% static 'main/media/b_major_full.png' %}",
 
-        'C minor'       : "{% static 'main/media/c_minor_letters.png' %}",
-        'C♯/D♭ minor'  : "{% static 'main/media/csharp_minor_letters.png' %}",
-        'D minor'       : "{% static 'main/media/d_minor_full.png' %}",
-        'D♯/E♭ minor'  : "{% static 'main/media/dsharp_minor_letters.png' %}",
-        'E minor'       : "{% static 'main/media/e_minor_letters.png' %}",
-        'F minor'       : "{% static 'main/media/f_minor_letters.png' %}",
-        'F♯/G♭ minor'  : "{% static 'main/media/fsharp_minor_letters.png' %}",
-        'G minor'       : "{% static 'main/media/g_minor_letters.png' %}",
-        'G♯/A♭ minor'  : "{% static 'main/media/gsharp_minor_letters.png' %}",
-        'A minor'       : "{% static 'main/media/a_minor_full.png' %}",
-        'A♯/B♭ minor'  : "{% static 'main/media/asharp_minor_letters.png' %}",
-        'B minor'       : "{% static 'main/media/b_minor_letters.png' %}"
-    }
+    "C minor": "{% static 'main/media/c_minor_letters.png' %}",
+    "C♯/D♭ minor": "{% static 'main/media/csharp_minor_letters.png' %}",
+    "D minor": "{% static 'main/media/d_minor_full.png' %}",
+    "D♯/E♭ minor": "{% static 'main/media/dsharp_minor_letters.png' %}",
+    "E minor": "{% static 'main/media/e_minor_letters.png' %}",
+    "F minor": "{% static 'main/media/f_minor_letters.png' %}",
+    "F♯/G♭ minor": "{% static 'main/media/fsharp_minor_letters.png' %}",
+    "G minor": "{% static 'main/media/g_minor_letters.png' %}",
+    "G♯/A♭ minor": "{% static 'main/media/gsharp_minor_letters.png' %}",
+    "A minor": "{% static 'main/media/a_minor_full.png' %}",
+    "A♯/B♭ minor": "{% static 'main/media/asharp_minor_letters.png' %}",
+    "B minor": "{% static 'main/media/b_minor_letters.png' %}",
+  };
 
-    function spotifyNextSong() {
-        fetch('http://127.0.0.1:8000/ajax_next_song/')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                playingOrNot2();
-            })
-            .catch(function (data) {
-                console.log('spotifyNextSong ERROR', data);
-            })
-    };
+  function spotifyNextSong() {
+    fetch("http://127.0.0.1:8000/ajax_next_song/")
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        playingOrNot2();
+      })
+      .catch(function (data) {
+        console.log("spotifyNextSong ERROR", data);
+      });
+  }
 
-    // launched at the start of loading the webpage
-    // only checks if there's something playing or not, then sets the button name appropriately
-    function isSomethingPlayingOrNot() {
-       $.ajax({
-            type:'GET',
-            url: 'http://127.0.0.1:8000/ajax_spotify_track_info/',
-            success: function (data) {
-                playState = data['is_playing'];
-                if (data['is_playing'] == null || data['is_playing'] == false) {
-                    playButton.innerHTML = 'Play';
-                } else {
-                    playButton.innerHTML = 'Pause';
-                }
-            },
-            error: function (data) {
-                // this probably means something is already playing, that's why we get
-                // spotipy.exceptions.SpotifyException: http status: 403, code:-1
-                // Player command failed: Restriction violated, reason: UNKNOWN
-                // console.log('error')
-                alert(`ERROR, play state: ${data['is_playing']}`);
-                playButton.innerHTML = 'Pause';
-            }
-        })
-    };
-    isSomethingPlayingOrNot();
-
-
-    function playingOrNot2 () {
-        return  fetch('http://127.0.0.1:8000/ajax_spotify_track_info')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                var curTrack = data['track'];
-                var prevTrack = mainSongTitle.innerHTML;
-                prevTrack = prevTrack.replace('&amp;', '&');
-                if (curTrack != prevTrack) {
-                    mainSongTitle.innerHTML = curTrack;
-                    if (artistName) {
-                        artistName.innerHTML = data['artist'];
-                    } else {
-                        artistName = document.createElement('h6');
-                        artistName.setAttribute('id', 'artist-name')
-                        artistName.innerHTML = data['artist'];
-                    }
-                    if (keySignature) {
-                        keySignature.innerHTML = data['key'];
-                    } else {
-                        keySignature = document.createElement('h4');
-                        keySignature.setAttribute('id', 'key-signature');
-                        keySignature.innerHTML = data['key'];
-                    }
-                    if (keyConfidence) {
-                        keyConfidence.innerHTML = data['key_confidence'];
-                    } else {
-                        keyConfidence = document.createElement('h6');
-                        keyConfidence.setAttribute('id', 'key-confidence');
-                        keyConfidence.innerHTML = data['key_confidence'];
-                    }
-                    if (musicMode) {
-                        musicMode.innerHTML = data['mode'];
-                    } else {
-                        musicMode = document.createElement('h4');
-                        musicMode.setAttribute('id', 'music-mode');
-                        musicMode.innerHTML = data['mode'];
-                    }
-
-                    albumArt.setAttribute('src', data['album_art']);
-
-                    if (guitarScaleImg) {
-                        guitarScaleImg.setAttribute('src', keyImageMap[data['key'] + ' ' + data['mode']]);
-                    } else {
-                        guitarScaleImg = document.createElement('img');
-                        guitarScaleImg.setAttribute('src', keyImageMap[data['key'] + ' ' + data['mode']]);
-                        guitarScaleDiv.appendChild(guitarScaleImg);
-                    }
-
-                    tuneBat.setAttribute('href', `https://tunebat.com/Search?q=${data['first_artist']}+${data['track_name_for_searching']}`);
-                    noteDiscover.setAttribute('href', `https://www.notediscover.com/search?q=${data['first_artist']}+${data['track_name_for_searching']}`);
-                    chordify.setAttribute('href', `https://chordify.net/search/${data['first_artist']}+${data['track_name_for_searching']}`);
-                    ultimateGuitar.setAttribute('href', `https://www.ultimate-guitar.com/search.php?search_type=title&value=
-                                                        ${data['first_artist']}+${data['track_name_for_searching']}`);
-
-                    console.log(`track has changed from ${prevTrack} into ${curTrack}`, 'by ', data['artist'], data['key'], data['key_confidence']);
-
-                    if (data['is_playing'] && data['is_playing'] !== null) {
-                        playButton.innerHTML = 'Pause';
-                    } else if (data['is_playing'] === true) {
-                        playButton.innerHTML = 'Play';
-                    }
-                }
-            })
-            .catch(function (data) {
-                console.log('playingOrNot2 ERROR IDK', data);
-            })
-    };
-
-
-    // https://stackoverflow.com/questions/62841857/how-do-i-stop-a-while-loop-with-a-button-javascript
-    var flag = true;
-
-    function stop () {
-        flag = false;
-        console.log('inf loop has been paused');
-    };
-
-    function resumeLoop () {
-        flag = true;
-        infiniteLoop();
-        console.log('inf loop has been RESUMED');
-    };
-
-    async function infiniteLoop(evt) {
-        var ctr = 0;
-        while (flag) {
-            await playingOrNot2()
-                .then(data => {
-                    // curSong = data['track'];
-                })
-                .catch(function (data) {
-                    console.log('error from playingOrNot2 function call');
-                });
-            await sleep(10000);
-            console.log('sleeping zzzz');
+  // launched at the start of loading the webpage
+  // only checks if there's something playing or not, then sets the button name appropriately
+  function isSomethingPlayingOrNot() {
+    $.ajax({
+      type: "GET",
+      url: "http://127.0.0.1:8000/ajax_spotify_track_info/",
+      success: function (data) {
+        playState = data["is_playing"];
+        if (data["is_playing"] == null || data["is_playing"] == false) {
+          playButton.innerHTML = "Play";
+        } else {
+          playButton.innerHTML = "Pause";
         }
-    };
+      },
+      error: function (data) {
+        // this probably means something is already playing, that's why we get
+        // spotipy.exceptions.SpotifyException: http status: 403, code:-1
+        // Player command failed: Restriction violated, reason: UNKNOWN
+        // console.log('error')
+        alert(`ERROR, play state: ${data["is_playing"]}`);
+        playButton.innerHTML = "Pause";
+      },
+    });
+  }
+  isSomethingPlayingOrNot();
+
+  function playingOrNot2() {
+    return fetch("http://127.0.0.1:8000/ajax_spotify_track_info")
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        var curTrack = data["track"];
+        var prevTrack = mainSongTitle.innerHTML;
+        prevTrack = prevTrack.replace("&amp;", "&");
+        if (curTrack != prevTrack) {
+          mainSongTitle.innerHTML = curTrack;
+          if (artistName) {
+            artistName.innerHTML = data["artist"];
+          } else {
+            artistName = document.createElement("h6");
+            artistName.setAttribute("id", "artist-name");
+            artistName.innerHTML = data["artist"];
+          }
+          if (keySignature) {
+            keySignature.innerHTML = data["key"];
+          } else {
+            keySignature = document.createElement("h4");
+            keySignature.setAttribute("id", "key-signature");
+            keySignature.innerHTML = data["key"];
+          }
+          if (keyConfidence) {
+            keyConfidence.innerHTML = data["key_confidence"];
+          } else {
+            keyConfidence = document.createElement("h6");
+            keyConfidence.setAttribute("id", "key-confidence");
+            keyConfidence.innerHTML = data["key_confidence"];
+          }
+          if (musicMode) {
+            musicMode.innerHTML = data["mode"];
+          } else {
+            musicMode = document.createElement("h4");
+            musicMode.setAttribute("id", "music-mode");
+            musicMode.innerHTML = data["mode"];
+          }
+
+          albumArt.setAttribute("src", data["album_art"]);
+
+          if (guitarScaleImg) {
+            guitarScaleImg.setAttribute(
+              "src",
+              keyImageMap[data["key"] + " " + data["mode"]]
+            );
+          } else {
+            guitarScaleImg = document.createElement("img");
+            guitarScaleImg.setAttribute(
+              "src",
+              keyImageMap[data["key"] + " " + data["mode"]]
+            );
+            guitarScaleDiv.appendChild(guitarScaleImg);
+          }
+
+          tuneBat.setAttribute(
+            "href",
+            `https://tunebat.com/Search?q=${data["first_artist"]}+${data["track_name_for_searching"]}`
+          );
+          noteDiscover.setAttribute(
+            "href",
+            `https://www.notediscover.com/search?q=${data["first_artist"]}+${data["track_name_for_searching"]}`
+          );
+          chordify.setAttribute(
+            "href",
+            `https://chordify.net/search/${data["first_artist"]}+${data["track_name_for_searching"]}`
+          );
+          ultimateGuitar.setAttribute(
+            "href",
+            `https://www.ultimate-guitar.com/search.php?search_type=title&value=
+                                                        ${data["first_artist"]}+${data["track_name_for_searching"]}`
+          );
+
+          console.log(
+            `track has changed from ${prevTrack} into ${curTrack}`,
+            "by ",
+            data["artist"],
+            data["key"],
+            data["key_confidence"]
+          );
+
+          if (data["is_playing"] && data["is_playing"] !== null) {
+            playButton.innerHTML = "Pause";
+          } else if (data["is_playing"] === true) {
+            playButton.innerHTML = "Play";
+          }
+        }
+      })
+      .catch(function (data) {
+        console.log("playingOrNot2 ERROR IDK", data);
+      });
+  }
+
+  // https://stackoverflow.com/questions/62841857/how-do-i-stop-a-while-loop-with-a-button-javascript
+  var flag = true;
+
+  function stop() {
+    flag = false;
+    console.log("inf loop has been paused");
+  }
+
+  function resumeLoop() {
+    flag = true;
     infiniteLoop();
+    console.log("inf loop has been RESUMED");
+  }
 
-
-    playButton.addEventListener('click', z)
-    function z() {
-        if (playButton.innerHTML == 'Play') {
-            playButton.innerHTML = 'Pause';
-            spotifyPauseOrPlay({'status_to_send_to_sp': 'play'});
-        }
-        else {
-            playButton.innerHTML = 'Play';
-            spotifyPauseOrPlay({'status_to_send_to_sp': 'pause'});
-        }
-    };
-
-    function spotifyPauseOrPlay(requestBody) {
-        $.ajax({
-            type:'GET',
-            url: 'http://127.0.0.1:8000/ajax_pause_play/',
-            data: requestBody,
-            dataType: 'json'
+  async function infiniteLoop(evt) {
+    var ctr = 0;
+    while (flag) {
+      await playingOrNot2()
+        .then((data) => {
+          // curSong = data['track'];
         })
-    };
-
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        .catch(function (data) {
+          console.log("error from playingOrNot2 function call");
+        });
+      await sleep(10000);
+      console.log("sleeping zzzz");
     }
+  }
+  infiniteLoop();
 
+  playButton.addEventListener("click", z);
+  function z() {
+    if (playButton.innerHTML == "Play") {
+      playButton.innerHTML = "Pause";
+      spotifyPauseOrPlay({ status_to_send_to_sp: "play" });
+    } else {
+      playButton.innerHTML = "Play";
+      spotifyPauseOrPlay({ status_to_send_to_sp: "pause" });
+    }
+  }
+
+  function spotifyPauseOrPlay(requestBody) {
+    $.ajax({
+      type: "GET",
+      url: "http://127.0.0.1:8000/ajax_pause_play/",
+      data: requestBody,
+      dataType: "json",
+    });
+  }
+
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 </script>
 
 {% endblock %}
