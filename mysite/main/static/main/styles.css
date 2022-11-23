@@ -1,14 +1,16 @@
 /* Google Font Import - Poppins */
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+
+:root {
+  --main-color: rgb(218, 76, 60);
+  --sidebar-bg: #242526;
+}
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Open Sans", sans-serif;
-}
-
-:root {
+  font-family: "Roboto Mono", sans-serif;
 }
 
 body {
@@ -18,19 +20,34 @@ body {
 /* styling of the outermost nav flexbox */
 .sidebar {
   width: 90px;
-  /* background-color: red; */
+  border: 1px solid black;
+  background-color: var(--sidebar-bg);
   height: 100%;
   position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  /* align-items: center; */
+  transition: width 0.6s ease;
+  padding: 0 27px;
+  z-index: 100;
+}
+
+.sidebar:hover {
+  width: 250px;
+  height: 100vh;
 }
 
 /* 1st element of main flexbox - BURGER */
 .burger {
-  font-size: 2.22rem;
+  font-size: 1.75rem;
   margin: 0.7rem 0;
+  color: white;
+  transition: color 0.6s ease;
+}
+
+.sidebar:hover .burger {
+  color: var(--main-color);
 }
 
 /* 
@@ -41,25 +58,64 @@ body {
 .menu-bar {
   /* this ensures that this middle flexbox component
   sticks at the top near the burger */
-  margin-bottom: auto;
   height: 100%;
+  margin-top: 1rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
+.menu-bar ul.menu-links {
+  list-style-type: none;
+  font-size: 1.5rem;
+}
+
+.menu-links li:last-child {
+  position: absolute;
+  bottom: 0;
+}
+
+/* TODO: Text next to icon when close is not active */
 /* Icons and their text */
-.sidebar.close span.nav-text {
-  display: none;
-}
 
-.nav-text {
-  display: none;
+li.nav-link {
+  /* icons */
+  margin: 1.8rem 0;
 }
 
 a {
   color: white;
   text-decoration: none;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-/* styling the main content */
+a:hover {
+  color: var(--main-color);
+}
+
+.nav-text {
+  position: absolute;
+  display: inline;
+  margin-left: 3rem;
+  font-size: 1rem;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.6s ease, opacity 0.6s ease;
+}
+
+.sidebar:hover .nav-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/*
+ *
+ * 
+ * styling the main content 
+ */
 .main-content {
   position: absolute;
   left: 90px;
