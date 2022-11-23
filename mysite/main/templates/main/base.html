@@ -31,7 +31,7 @@
         <li class="nav-li">
           <a href="/home" class="nav-link">
             <i class="bx bx-home-alt icon"></i>
-            <span class="link-text">Homie</span>
+            <span class="link-text">Home</span>
           </a>
         </li>
 
@@ -59,9 +59,7 @@
     </nav>
 
     <div id="content" name="content" class="main">
-      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Pariatur alias
-      nobis eligendi! Soluta vitae facilis quae consequuntur aut rerum?
-      Asperiores. {% block content %} {% endblock %}
+      {% block content %} {% endblock %}
     </div>
 
     <!-- Javascript -->
@@ -71,14 +69,10 @@
     <script>
       const header = document.querySelector(".header i");
       const navbar = document.querySelector(".navbar");
-      const mainEl = document.querySelector("main");
+      const mainEl = document.querySelector(".main");
 
       header.addEventListener("click", (e) => {
         navbar.classList.toggle("active");
-      });
-
-      navbar.addEventListener("click", (e) => {
-        navbar.classList.add("active");
       });
 
       mainEl.addEventListener("click", (e) => {
