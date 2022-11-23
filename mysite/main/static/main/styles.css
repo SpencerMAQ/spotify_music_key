@@ -1,361 +1,67 @@
 /* Google Font Import - Poppins */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 
-@font-face {
-    font-family: "Noto Sans JP Regular";
-
-    src:
-        local("Noto Sans JP"),
-        url("_NotoSansJP-Regular.otf");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
 }
 
-
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", "Poppins" , "Noto Sans JP", "Noto Sans JP Regular", sans-serif;
+:root {
 }
 
-:root{
-    /* ===== Colors ===== */
-    /*--body-color: #E4E9F7;*/
-    /*--sidebar-color: #FFF;*/
-    /*--primary-color: rgb(249, 85, 151);*/
-    /*--primary-color-light: #F6F5FF;*/
-    /*--toggle-color: #DDD;*/
-    /*--text-color: #707070;*/
-    --body-color: #18191a;
-    --sidebar-color: #242526;
-    --primary-color: rgb(209, 85, 151);
-    --primary-color-light: #3a3b3c;
-    --toggle-color: #fff;
-    --text-color: #ccc;
-
-    /* ====== Transition ====== */
-    --tran-03: all 0.2s ease;
-    --tran-03: all 0.3s ease;
-    --tran-04: all 0.3s ease;
-    --tran-05: all 0.3s ease;
+body {
+  height: 100vh;
 }
 
-body{
-    min-height: 100vh;
-    background-color: var(--body-color);
-    transition: var(--tran-05);
-    font-family: "Lato", "Inter", "Noto Sans JP", "Noto Sans JP Regular", sans-serif;
+/* styling of the outermost nav flexbox */
+.sidebar {
+  width: 90px;
+  /* background-color: red; */
+  height: 100%;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
 
-::selection{
-    background-color: var(--primary-color);
-    color: #fff;
+/* 1st element of main flexbox - BURGER */
+.burger {
+  font-size: 2.22rem;
+  margin: 0.7rem 0;
 }
 
-body.dark{
-    --body-color: #18191a;
-    --sidebar-color: #242526;
-    --primary-color: rgb(209, 85, 151);
-    --primary-color-light: #3a3b3c;
-    --toggle-color: #fff;
-    --text-color: #ccc;
+/* 
+ * 
+ * 
+ * middle component of main flexbox 
+ */
+.menu-bar {
+  /* this ensures that this middle flexbox component
+  sticks at the top near the burger */
+  margin-bottom: auto;
+  height: 100%;
 }
 
-/* ===== Sidebar ===== */
- .sidebar{
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 250px;
-    padding: 10px 14px;
-    background: var(--sidebar-color);
-    transition: var(--tran-05);
-    z-index: 100;
-}
-.sidebar.close{
-    width: 88px;
+/* Icons and their text */
+.sidebar.close span.nav-text {
+  display: none;
 }
 
-/* ===== Reusable code - Here ===== */
-.sidebar li{
-    height: 50px;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
+.nav-text {
+  display: none;
 }
 
-.sidebar header .image,
-.sidebar .icon{
-    min-width: 60px;
-    border-radius: 6px;
+a {
+  color: white;
+  text-decoration: none;
 }
 
-.sidebar .icon{
-    min-width: 60px;
-    border-radius: 6px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-}
-
-.sidebar .text,
-.sidebar .icon{
-    color: var(--text-color);
-    transition: var(--tran-03);
-}
-
-.sidebar .text{
-    font-size: 17px;
-    font-weight: 500;
-    white-space: nowrap;
-    opacity: 1;
-}
-.sidebar.close .text{
-    opacity: 0;
-}
-/* =========================== */
-
-.sidebar header{
-    position: relative;
-}
-
-.sidebar header .image-text{
-    display: flex;
-    align-items: center;
-}
-.sidebar header .logo-text{
-    display: flex;
-    flex-direction: column;
-}
-header .image-text .name {
-    margin-top: 2px;
-    font-size: 1.4em;
-    font-weight: 600;
-}
-
-header .image-text .profession{
-    font-size: 0.7em;
-    margin-top: -2px;
-    display: block;
-}
-
-.sidebar header .image{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.sidebar header .image img{
-    width: 40px;
-    border-radius: 6px;
-}
-
-.sidebar header .toggle{
-    position: absolute;
-    top: 50%;
-    right: -25px;
-    transform: translateY(-50%) rotate(180deg);
-    height: 25px;
-    width: 25px;
-    background-color: var(--primary-color);
-    color: var(--sidebar-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    cursor: pointer;
-    transition: var(--tran-05);
-}
-
-body.dark .sidebar header .toggle{
-    color: var(--text-color);
-}
-
-.sidebar.close .toggle{
-    transform: translateY(-50%) rotate(0deg);
-}
-
-.sidebar .menu{
-    margin-top: 40px;
-    /*background: red;*/
-}
-
-.sidebar li a{
-    list-style: none;
-    height: 100%;
-    background-color: transparent;
-    display: flex;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: var(--tran-03);
-}
-
-.sidebar li a:hover{
-    background-color: var(--primary-color);
-}
-.sidebar li a:hover .icon,
-.sidebar li a:hover .text{
-    color: var(--sidebar-color);
-}
-body.dark .sidebar li a:hover .icon,
-body.dark .sidebar li a:hover .text{
-    color: var(--text-color);
-}
-
-.sidebar ul {
-    position: relative;
-    left: -35px;
-}
-
-.sidebar .menu-bar{
-    height: calc(100% - 55px);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    overflow-y: scroll;
-    /*background: red;*/
-}
-.menu-bar::-webkit-scrollbar{
-    display: none;
-}
-.sidebar .menu-bar .mode{
-    border-radius: 6px;
-    background-color: var(--primary-color-light);
-    position: relative;
-    transition: var(--tran-05);
-}
-
-.menu-bar .mode .sun-moon{
-    height: 50px;
-    width: 60px;
-}
-
-.mode .sun-moon i{
-    position: absolute;
-}
-.mode .sun-moon i.sun{
-    opacity: 0;
-}
-body.dark .mode .sun-moon i.sun{
-    opacity: 1;
-}
-body.dark .mode .sun-moon i.moon{
-    opacity: 0;
-}
-
-.menu-bar .bottom-content .toggle-switch{
-    position: absolute;
-    right: 0;
-    height: 100%;
-    min-width: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    cursor: pointer;
-}
-.toggle-switch .switch{
-    position: relative;
-    height: 22px;
-    width: 40px;
-    border-radius: 25px;
-    background-color: var(--toggle-color);
-    transition: var(--tran-05);
-}
-
-.switch::before{
-    content: '';
-    position: absolute;
-    height: 15px;
-    width: 15px;
-    border-radius: 50%;
-    top: 50%;
-    left: 5px;
-    transform: translateY(-50%);
-    background-color: var(--sidebar-color);
-    transition: var(--tran-04);
-}
-
-body.dark .switch::before{
-    left: 20px;
-}
-
-.main_content{
-    position: absolute;
-    top: 0;
-    top: 0;
-    left: 270px;
-    height: 100vh;
-    width: calc(100% - 250px);
-    /*background-color: var(--body-color);*/
-    transition: var(--tran-05);
-}
-/*.home .text{*/
-/*    font-size: 30px;*/
-/*    font-weight: 500;*/
-/*    color: var(--text-color);*/
-/*    padding: 12px 60px;*/
-/*}*/
-
-.sidebar.close ~ .main_content{
-    left: 98px;
-    height: 100vh;
-    width: calc(100% - 98px);
-}
-body.dark .home .text{
-    color: var(--text-color);
-}
-
-
-
-
-
-
-.fifths {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-}
-
-.album_art {
-    max-width: 250px;
-    border-radius: 11px;
-}
-
-/* spotify control buttons */
-
-#play-button {
-    color: white;
-    background-color: var(--sidebar-color);
-    padding: 8px 8px 8px 8px;
-    border-radius: 11px;
-    border: none;
-}
-
-#pause-loop, #resume-loop {
-    color: white;
-    background-color: var(--sidebar-color);
-    padding: 8px 8px 8px 8px;
-    border-radius: 11px;
-    border: none;
-}
-
-#next-button {
-    background-color: var(--sidebar-color);
-    color: white;
-    padding: 8px 8px 8px 8px;
-    border-radius: 11px;
-    border: none;
-    font-size: 15px;
+/* styling the main content */
+.main-content {
+  position: absolute;
+  left: 90px;
+  margin-left: 1rem;
 }
