@@ -233,3 +233,8 @@ button {
 img#al_art {
   border-radius: 0.5rem;
 }
+
+/* disable text selection for details/summary */
+details {
+  user-select: none;
+}
