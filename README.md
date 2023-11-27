@@ -1,17 +1,4 @@
-TODO:
-Now:
-make circle of 5ths/guitar scales only appear as neede (i.e. by the user) similar to how spotify only shows lyrics when the user clicks it
+# Spotify Music Key (Django)
 
-
-Future:
-WEB Player SDK  
-Auto detect change in song, then update only the changed elements (probably involves JS?, so that u won't have to refresh to see changes)  
-Look for Guitar scale charts (other: piano scale charts, chord charts, etc.)  
-
-Depolyment features:  
-    ML to suggest a next track  
-    e.g. based on similarity by genre, chord prog, key  
-
-
-. commit message = just created a save point before starting this tutorial: https://www.youtube.com/watch?v=rYDDWVuv-kI
-.
+An ad-hoc web app i built as an aid for learning music theory / ear training. (Builtin using Django).  
+This app has now been superseded by a much more robust app I built using ReactJS/NextJS and Typescript.
